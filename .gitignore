@@ -28,4 +28,5 @@ uv.lock
 
 frontend/node_modules/
 backend/src/core/
+backend/src/core/config.py
 backend/src/sqldb/connection.py
