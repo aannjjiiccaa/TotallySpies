@@ -7,12 +7,6 @@ ENTRYPOINT_KEYWORDS = {
 }
 
 
-ENTRYPOINT_KEYWORDS = {
-    "run", "start", "entry", "main", "initialize", "boot",
-    "launch", "execute", "cli", "server", "app"
-}
-
-
 class ChromaRetriever:
     def __init__(self, collection, top_k: int = 8):
         self.collection = collection

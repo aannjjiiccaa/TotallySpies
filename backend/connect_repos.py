@@ -3,6 +3,7 @@ from chromadb import PersistentClient
 from src.core.config import get_settings
 from urllib.parse import urlparse
 
+
 def second_pass():
     settings = get_settings()
     client = PersistentClient(path=settings.PERSIST_DIR)
@@ -41,6 +42,7 @@ def second_pass():
             documents=[document],
             metadatas=[metadata]
         )
+
 
 def find(http_calls):
     settings = get_settings()
