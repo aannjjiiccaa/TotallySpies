@@ -23,116 +23,26 @@ interface GraphEdge {
 function getPlaceholderGraph(): { nodes: GraphNode[]; edges: GraphEdge[] } {
   const nodes: GraphNode[] = [
     // repos
-    {
-      id: "repo-web",
-      kind: "repo",
-      label: "web-storefront",
-      repo: "repo-web",
-      description: "React storefront with checkout and product exploration.",
-    },
-    {
-      id: "repo-admin",
-      kind: "repo",
-      label: "admin-dashboard",
-      repo: "repo-admin",
-      description: "Operational dashboard for support, merchandising, and catalog edits.",
-    },
-    {
-      id: "repo-auth",
-      kind: "repo",
-      label: "auth-service",
-      repo: "repo-auth",
-      description: "Identity, sessions, and credential recovery.",
-    },
-    {
-      id: "repo-order",
-      kind: "repo",
-      label: "order-service",
-      repo: "repo-order",
-      description: "Order lifecycle orchestration and status tracking.",
-    },
-    {
-      id: "repo-payment",
-      kind: "repo",
-      label: "payment-service",
-      repo: "repo-payment",
-      description: "Payment, refund, and billing integrations.",
-    },
+    { id: "repo-web", kind: "repo", label: "web-storefront", repo: "repo-web", description: "React storefront with checkout and product exploration." },
+    { id: "repo-admin", kind: "repo", label: "admin-dashboard", repo: "repo-admin", description: "Operational dashboard for support, merchandising, and catalog edits." },
+    { id: "repo-auth", kind: "repo", label: "auth-service", repo: "repo-auth", description: "Identity, sessions, and credential recovery." },
+    { id: "repo-order", kind: "repo", label: "order-service", repo: "repo-order", description: "Order lifecycle orchestration and status tracking." },
+    { id: "repo-payment", kind: "repo", label: "payment-service", repo: "repo-payment", description: "Payment, refund, and billing integrations." },
 
     // services
-    {
-      id: "svc-gateway",
-      kind: "service",
-      label: "api-gateway",
-      repo: "repo-web",
-      description: "Edge router that authenticates users and routes traffic to downstream services.",
-      meta: { entryPoint: true },
-    },
-    {
-      id: "svc-auth",
-      kind: "service",
-      label: "auth",
-      repo: "repo-auth",
-      description: "Issues tokens, enforces auth, and integrates with third-party identity providers.",
-      meta: { domain: "identity" },
-    },
-    {
-      id: "svc-order",
-      kind: "service",
-      label: "orders",
-      repo: "repo-order",
-      description: "Creates orders, reserves inventory, and publishes order events.",
-      meta: { domain: "orders" },
-    },
-    {
-      id: "svc-payment",
-      kind: "service",
-      label: "payments",
-      repo: "repo-payment",
-      description: "Handles checkout sessions, payment intents, and billing webhooks.",
-      meta: { domain: "billing" },
-    },
+    { id: "svc-gateway", kind: "service", label: "api-gateway", repo: "repo-web", description: "Edge router that authenticates users and routes traffic to downstream services.", meta: { entryPoint: true } },
+    { id: "svc-auth", kind: "service", label: "auth", repo: "repo-auth", description: "Issues tokens, enforces auth, and integrates with third-party identity providers.", meta: { domain: "identity" } },
+    { id: "svc-order", kind: "service", label: "orders", repo: "repo-order", description: "Creates orders, reserves inventory, and publishes order events.", meta: { domain: "orders" } },
+    { id: "svc-payment", kind: "service", label: "payments", repo: "repo-payment", description: "Handles checkout sessions, payment intents, and billing webhooks.", meta: { domain: "billing" } },
 
     // infra
-    {
-      id: "db-postgres",
-      kind: "db",
-      label: "PostgreSQL",
-      description: "Primary relational store for orders, payments, and users.",
-      meta: { role: "primary store" },
-    },
-    {
-      id: "db-redis",
-      kind: "db",
-      label: "Redis",
-      description: "Cache for sessions, rate limiting, and hot product reads.",
-      meta: { role: "cache/sessions" },
-    },
-    {
-      id: "queue-events",
-      kind: "queue",
-      label: "event-bus",
-      description: "Pub/Sub topics for order lifecycle and notification fan-out.",
-      meta: { topics: ["order.created"] },
-    },
+    { id: "db-postgres", kind: "db", label: "PostgreSQL", description: "Primary relational store for orders, payments, and users.", meta: { role: "primary store" } },
+    { id: "db-redis", kind: "db", label: "Redis", description: "Cache for sessions, rate limiting, and hot product reads.", meta: { role: "cache/sessions" } },
+    { id: "queue-events", kind: "queue", label: "event-bus", description: "Pub/Sub topics for order lifecycle and notification fan-out.", meta: { topics: ["order.created"] } },
 
     // files
-    {
-      id: "file-auth-controller",
-      kind: "file",
-      label: "auth.controller.ts",
-      repo: "repo-auth",
-      description: "HTTP handlers for login, signup, and password reset that call the auth service.",
-      meta: { path: "src/auth/auth.controller.ts" },
-    },
-    {
-      id: "file-order-handler",
-      kind: "file",
-      label: "order.handler.ts",
-      repo: "repo-order",
-      description: "Background worker that processes order events, updates status, and writes projections.",
-      meta: { path: "src/orders/order.handler.ts" },
-    },
+    { id: "file-auth-controller", kind: "file", label: "auth.controller.ts", repo: "repo-auth", description: "HTTP handlers for login, signup, and password reset that call the auth service.", meta: { path: "src/auth/auth.controller.ts" } },
+    { id: "file-order-handler", kind: "file", label: "order.handler.ts", repo: "repo-order", description: "Background worker that processes order events, updates status, and writes projections.", meta: { path: "src/orders/order.handler.ts" } },
   ];
 
   const edges: GraphEdge[] = [
@@ -163,19 +73,31 @@ function getPlaceholderGraph(): { nodes: GraphNode[]; edges: GraphEdge[] } {
   return { nodes, edges };
 }
 
-const LANE_HEIGHT = 160;
-const BASE_Y = 140;
-const KIND_X: Record<NodeKind, number> = {
-  repo: 120,
-  service: 360,
-  db: 620,
-  queue: 880,
-  file: 1140,
+// Swimlanes layout
+const BASE_X = 140;
+const LANE_WIDTH = 260;
+
+const KIND_Y: Record<NodeKind, number> = {
+  repo: 140,
+  service: 320,
+  db: 500,
+  queue: 680,
+  file: 860,
+};
+
+// ✅ vesele boje: bg = border-ish, border = malo tamnije, text = čitljiv
+const KIND_COLORS: Record<NodeKind, { bg: string; border: string; text: string }> = {
+  repo: { bg: "#93C5FD", border: "#2563EB", text: "#0B1220" },     // blue
+  service: { bg: "#86EFAC", border: "#16A34A", text: "#0B1220" },  // green
+  file: { bg: "#FDE68A", border: "#D97706", text: "#0B1220" },     // yellow
+  db: { bg: "#C4B5FD", border: "#7C3AED", text: "#0B1220" },       // purple
+  queue: { bg: "#F9A8D4", border: "#DB2777", text: "#0B1220" },    // pink
 };
 
 export default function ProjectGraphPlaceholder() {
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
+
   const [selected, setSelected] = useState<{
     id: string;
     label: string;
@@ -186,12 +108,15 @@ export default function ProjectGraphPlaceholder() {
     neighbors: string[];
     edges: string[];
   } | null>(null);
+
   const [hovered, setHovered] = useState<{
     id: string;
     label: string;
+    kind: NodeKind;
     description?: string;
     repoLabel?: string;
   } | null>(null);
+
   const [searchTerm, setSearchTerm] = useState("");
 
   const graph = useMemo(() => getPlaceholderGraph(), []);
@@ -200,7 +125,7 @@ export default function ProjectGraphPlaceholder() {
   const repoNodes = useMemo(() => graph.nodes.filter((n) => n.kind === "repo"), [graph]);
 
   const repoColors = useMemo(() => {
-    const palette = ["#dedefe", "#c6fbc2", "#e8f7ff", "#f2eefe", "#e7ffdb", "#d8e3ff"];
+    const palette = ["#E0E7FF", "#DCFCE7", "#FEF9C3", "#F3E8FF", "#FCE7F3", "#E2E8F0"];
     return repoNodes.reduce<Record<string, string>>((acc, repo, idx) => {
       acc[repo.id] = palette[idx % palette.length];
       return acc;
@@ -216,28 +141,34 @@ export default function ProjectGraphPlaceholder() {
     [repoNodes]
   );
 
-  const repoLegend = useMemo(
-    () => repoNodes.map((repo) => ({ id: repo.id, label: repo.label, color: repoColors[repo.id] })),
-    [repoNodes, repoColors]
-  );
-
+  // pozicioniranje bez preklapanja (infra db/queue širi po X)
   const elements: ElementDefinition[] = useMemo(() => {
-    const typeColor: Record<NodeKind, string> = {
-      repo: "#dedefe", // lilac
-      service: "#c6fbc2", // soft green
-      file: "#f5f7fb",
-      db: "#e8f7ff",
-      queue: "#f2eefe",
-    };
-
-    // Pre-compute lane positions for a swimlane-style layout.
     const laneIds = [...repoNodes.map((r) => r.id), "infra"];
     const laneIndex = (node: GraphNode) => laneIds.indexOf(node.repo ?? "infra");
 
+    const counters: Record<string, number> = {};
+    const nextOffsetIndex = (lane: number, kind: NodeKind) => {
+      const key = `${lane}:${kind}`;
+      counters[key] = (counters[key] ?? 0) + 1;
+      return counters[key] - 1;
+    };
+
+    const spread = (k: number) => (k === 0 ? 0 : (k % 2 === 1 ? 1 : -1) * Math.ceil(k / 2));
+
     const nodeElements: ElementDefinition[] = graph.nodes.map((n) => {
-      const color = typeColor[n.kind] ?? "#f8fafc";
-      const y = BASE_Y + laneIndex(n) * LANE_HEIGHT;
-      const x = KIND_X[n.kind] ?? 200;
+      const c = KIND_COLORS[n.kind];
+
+      const lane = laneIndex(n);
+      const baseX = BASE_X + lane * LANE_WIDTH;
+      const baseY = KIND_Y[n.kind] ?? 200;
+
+      const i = nextOffsetIndex(lane, n.kind);
+
+      const STEP_X = n.kind === "db" || n.kind === "queue" ? 160 : 95;
+      const STEP_Y = n.kind === "file" ? 28 : 20;
+
+      const dx = spread(i) * STEP_X;
+      const dy = n.repo ? i * STEP_Y : 0;
 
       return {
         data: {
@@ -247,9 +178,11 @@ export default function ProjectGraphPlaceholder() {
           repo: n.repo,
           description: n.description ?? "",
           meta: n.meta ?? {},
-          color,
+          bgColor: c.bg,
+          borderColor: c.border,
+          textColor: c.text,
         },
-        position: { x, y },
+        position: { x: baseX + dx, y: baseY + dy },
       };
     });
 
@@ -258,19 +191,20 @@ export default function ProjectGraphPlaceholder() {
     }));
 
     return [...nodeElements, ...edgeElements];
-  }, [graph, repoColors]);
+  }, [graph, repoNodes]);
 
   const selectNode = (node: any) => {
     const cy = cyRef.current;
     if (!cy || !node) return;
 
-    cy.elements().removeClass("selected dim");
+    cy.elements().removeClass("selected dimmed");
     node.addClass("selected");
 
     const neighborhood = node.closedNeighborhood();
-    cy.elements().difference(neighborhood).addClass("dim");
+    cy.elements().difference(neighborhood).addClass("dimmed");
 
     const repoId = node.data("repo") as string | undefined;
+
     setSelected({
       id: node.data("id"),
       label: node.data("label"),
@@ -282,7 +216,7 @@ export default function ProjectGraphPlaceholder() {
       edges: node.connectedEdges().map((e: any) => {
         const s = e.source().data("label");
         const t = e.target().data("label");
-        return `${e.data("kind")}: ${s} -> ${t}`;
+        return `${e.data("kind")}: ${s} → ${t}`;
       }),
     });
   };
@@ -292,154 +226,99 @@ export default function ProjectGraphPlaceholder() {
 
     cyRef.current?.destroy();
 
-    const ACCENT = "#69FF47"; // soft green accent
-    const BORDER = "rgba(15, 23, 42, 0.14)"; // slate-900 at ~14%
-    const EDGE = "rgba(15, 23, 42, 0.22)";
-    const TEXT = "#0f172a";
-    const TEXT_OUTLINE = "#ffffff";
-
     const style = [
       {
         selector: "node",
         style: {
           label: "data(label)",
-          "font-family":
-            'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+          "font-family": "DM Sans, system-ui, sans-serif",
           "font-size": "13px",
-          "font-weight": "700",
-          color: TEXT,
-          "text-wrap": "wrap",
-          "text-max-width": "140px",
-          "text-background-opacity": 0,
-          "text-outline-width": 0,
-          "text-outline-color": TEXT_OUTLINE,
-          "background-color": "data(color)",
-          shape: "roundrectangle",
-          width: "160px",
-          height: "52px",
-          "border-radius": "14px",
-          "border-width": "1px",
-          "border-color": "rgba(15,23,42,0.14)",
-          "text-valign": "center",
+          "font-weight": 650,
+          color: "data(textColor)",
+          "text-valign": "bottom",
           "text-halign": "center",
-          padding: "12px",
-          "shadow-blur": 16,
-          "shadow-color": "rgba(15,23,42,0.08)",
-          "shadow-offset-x": 0,
-          "shadow-offset-y": 8,
-        },
-      },
-
-      {
-        selector: 'node[kind="service"]',
-        style: {
-          width: "170px",
-          height: "56px",
-          "border-radius": "16px",
-          "border-width": "2px",
-          "border-color": "#69FF47",
-          "font-size": "13px",
-          "font-weight": "700",
-          "text-max-width": "150px",
-        },
-      },
-
-      {
-        selector: 'node[kind="repo"]',
-        style: {
-          width: "170px",
-          height: "56px",
-          "border-radius": "16px",
-          "border-width": "1.5px",
-          "border-color": "rgba(15,23,42,0.2)",
-          "text-max-width": "150px",
-          "font-weight": "700",
-        },
-      },
-
-      {
-        selector: 'node[kind="file"]',
-        style: {
-          shape: "roundrectangle",
-          width: "220px",
-          height: "54px",
-          "border-radius": "18px",
-          "font-size": "12px",
-          "font-weight": "600",
+          "text-margin-y": 8,
           "text-wrap": "wrap",
-          "text-max-width": "200px",
-          "border-width": "1px",
-          "border-color": "rgba(15,23,42,0.16)",
-          padding: "8px",
-        },
-      },
-      {
-        selector: 'node[kind="db"], node[kind="queue"]',
-        style: {
-          shape: "roundrectangle",
-          width: "200px",
-          height: "50px",
-          "border-radius": "16px",
-          "font-size": "12px",
-          "font-weight": "600",
-          "text-max-width": "170px",
-          "border-width": "1px",
-          "border-color": "rgba(15,23,42,0.16)",
-          padding: "6px",
-        },
+          "text-max-width": "120px",
+          "background-color": "data(bgColor)",
+          "border-width": 2,
+          "border-color": "data(borderColor)",
+          shape: "round-rectangle",
+          width: 56,
+          height: 56,
+          "overlay-opacity": 0,
+
+          // ✅ shadow default (blaga) + hover jača
+          "shadow-opacity": 0.18,
+          "shadow-blur": 8,
+          "shadow-offset-x": 0,
+          "shadow-offset-y": 4,
+          "shadow-color": "rgba(15, 23, 42, 0.35)",
+
+          "transition-property": "border-width, width, height, opacity, shadow-opacity, shadow-blur, shadow-offset-y",
+          "transition-duration": 150,
+        } as any,
       },
 
+      // jači shadow na hover (vidljiv!)
+      {
+        selector: "node.hovered",
+        style: {
+          "shadow-opacity": 0.32,
+          "shadow-blur": 10,
+          "shadow-offset-y": 6,
+        } as any,
+      },
+
+      {
+        selector: "node.selected",
+        style: {
+          "border-width": 3,
+          width: 64,
+          height: 64,
+          opacity: 1,
+        } as any,
+      },
+      {
+        selector: "node.dimmed",
+        style: { opacity: 0.22 } as any,
+      },
+
+      // edge: orto + rounded corners, bez labela, bez “click thicken”
       {
         selector: "edge",
         style: {
-          width: "1px",
-          "line-color": "rgba(15,23,42,0.16)",
+          width: 2,
+          "line-color": "#94a3b8",
           "curve-style": "taxi",
           "taxi-direction": "auto",
-          "taxi-turn": 10,
-          "taxi-turn-min-distance": 12,
-          "target-arrow-shape": "triangle",
-          "target-arrow-color": "rgba(15,23,42,0.16)",
-          "arrow-scale": 0.5,
-          label: "data(kind)",
-          "font-size": "9px",
-          "text-opacity": 0,
-          "text-background-opacity": 0,
-          "text-rotation": "autorotate",
-          "text-margin-y": "-4px",
-        },
-      },
-      {
-        selector: "edge:hover",
-        style: {
-          "text-opacity": 1,
-          "text-background-opacity": 0.92,
-          "text-background-color": "#ffffff",
-          "text-background-shape": "roundrectangle",
-          "text-background-padding": "2px",
-          color: "#0f172a",
-          "font-weight": "600",
-          "z-index": 9999,
-        },
-      },
-      {
-        selector: ".show-label",
-        style: {
-          "text-opacity": 1,
-          "text-background-opacity": 0.92,
-          "text-background-color": "#ffffff",
-          "text-background-shape": "roundrectangle",
-          "text-background-padding": "2px",
-          color: "#0f172a",
-          "font-weight": "600",
-          "z-index": 9999,
-        },
-      },
-      { selector: 'edge[kind="DEPENDS_ON"]', style: { "line-style": "dashed" } },
-      { selector: 'edge[kind="PUBLISHES"]', style: { "line-style": "dotted" } },
+          "taxi-turn": 24,
+          "taxi-turn-min-distance": 16,
+          "taxi-radius": 18,
 
-      { selector: ".selected", style: { "border-color": ACCENT, "border-width": "4px" } },
-      { selector: ".dim", style: { opacity: 0.18 } },
+          "target-arrow-shape": "triangle",
+          "target-arrow-color": "#94a3b8",
+          "arrow-scale": 0.9,
+          opacity: 0.7,
+
+          label: "",
+          "text-opacity": 0,
+
+          "transition-property": "opacity, line-color, target-arrow-color",
+          "transition-duration": 150,
+        } as any,
+      },
+
+      { selector: "edge.dimmed", style: { opacity: 0.12 } as any },
+      { selector: 'edge[kind="DEPENDS_ON"]', style: { "line-style": "dashed" } as any },
+      {
+        selector: 'edge[kind="PUBLISHES"]',
+        style: {
+          "line-style": "dotted",
+          "line-color": "#DB2777",
+          "target-arrow-color": "#DB2777",
+        } as any,
+      },
     ] as any;
 
     const cy = cytoscape({
@@ -452,48 +331,43 @@ export default function ProjectGraphPlaceholder() {
         fit: true,
         padding: layoutPadding,
         animate: true,
-        animationDuration: 380,
-        animationEasing: "ease-out-cubic",
+        animationDuration: 320,
+        animationEasing: "ease-out",
       },
       style,
     }) as Core;
 
     cyRef.current = cy;
-
-    cy.nodes().ungrabify(); // lock positions; keep zoom/pan enabled
+    cy.nodes().ungrabify();
     cy.boxSelectionEnabled(false);
 
     cy.fit(undefined, layoutPadding);
-    cy.zoom(cy.zoom() * 1.3);
+    cy.zoom(cy.zoom() * 1.2);
 
-    cy.on("tap", "node", (evt) => {
-      const node = evt.target;
-      selectNode(node);
-    });
+    cy.on("tap", "node", (evt) => selectNode(evt.target));
 
     cy.on("mouseover", "node", (evt) => {
       const node = evt.target;
+      node.addClass("hovered");
+
       const repoId = node.data("repo") as string | undefined;
       setHovered({
         id: node.data("id"),
         label: node.data("label"),
+        kind: node.data("kind"),
         description: node.data("description"),
         repoLabel: repoId ? repoLookup[repoId] ?? repoId : undefined,
       });
     });
 
-    cy.on("mouseout", "node", () => setHovered(null));
-
-    cy.on("mouseover", "edge", (evt) => {
-      evt.target.addClass("show-label");
-    });
-    cy.on("mouseout", "edge", (evt) => {
-      evt.target.removeClass("show-label");
+    cy.on("mouseout", "node", (evt) => {
+      evt.target.removeClass("hovered");
+      setHovered(null);
     });
 
     cy.on("tap", (evt) => {
       if (evt.target === cy) {
-        cy.elements().removeClass("selected dim");
+        cy.elements().removeClass("selected dimmed");
         setSelected(null);
       }
     });
@@ -505,22 +379,23 @@ export default function ProjectGraphPlaceholder() {
   }, [elements, repoLookup, repoColors, layoutPadding]);
 
   const smoothZoom = (factor: number) => {
-    if (!cyRef.current) return;
     const cy = cyRef.current;
-    const targetZoom = cy.zoom() * factor;
-    cy.animate({ zoom: targetZoom }, { duration: 140, easing: "ease-out" });
+    if (!cy) return;
+    cy.animate({ zoom: cy.zoom() * factor }, { duration: 140, easing: "ease-out" as any });
   };
 
   const zoomIn = () => smoothZoom(1.06);
   const zoomOut = () => smoothZoom(1 / 1.06);
+
   const fit = () => {
-    cyRef.current?.fit(undefined, layoutPadding);
-    if (cyRef.current) {
-      cyRef.current.animate({ zoom: cyRef.current.zoom() * 1.3 }, { duration: 180, easing: "ease-out" });
-    }
+    const cy = cyRef.current;
+    if (!cy) return;
+    cy.fit(undefined, layoutPadding);
+    cy.animate({ zoom: cy.zoom() * 1.2 }, { duration: 160, easing: "ease-out" as any });
   };
+
   const resetView = () => {
-    cyRef.current?.elements().removeClass("selected dim");
+    cyRef.current?.elements().removeClass("selected dimmed");
     setSelected(null);
     setHovered(null);
     fit();
@@ -531,38 +406,38 @@ export default function ProjectGraphPlaceholder() {
     if (!cy) return;
     const term = searchTerm.trim().toLowerCase();
     if (!term) return;
+
     const match = cy
       .nodes()
       .filter((n) => (n.data("label") as string)?.toLowerCase().includes(term) || n.id().toLowerCase().includes(term))
       .first();
-    if (match) {
+
+    if (match && match.length > 0) {
       selectNode(match);
-      cy.animate({ center: { eles: match }, zoom: Math.min(cy.zoom() * 1.08, 2.5) }, { duration: 200, easing: "ease-out" });
+      cy.animate({ center: { eles: match }, zoom: Math.min(cy.zoom() * 1.08, 2.5) }, { duration: 200, easing: "ease-out" as any });
     }
   };
 
   return (
     <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
-        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_320px] min-h-[70vh]">
+      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_320px] min-h-[70vh]">
         <div className="relative bg-card">
           <div
             className="pointer-events-none absolute inset-0"
             style={{
-              backgroundImage:
-                "radial-gradient(circle at 1px 1px, rgba(15,23,42,0.06) 1px, transparent 0)",
+              backgroundImage: "radial-gradient(circle at 1px 1px, rgba(15,23,42,0.06) 1px, transparent 0)",
               backgroundSize: "26px 26px",
             }}
           />
 
           {hovered && (
             <div className="absolute left-3 top-3 z-10 rounded-md border border-border bg-background/90 px-3 py-2 shadow-sm backdrop-blur text-xs max-w-sm">
-              <div className="font-semibold text-foreground">{hovered.label}</div>
-              {hovered.repoLabel && <div className="text-muted-foreground">{hovered.repoLabel}</div>}
-              {hovered.description && (
-                <div className="text-muted-foreground mt-1 leading-snug max-h-20 overflow-hidden text-ellipsis">
-                  {hovered.description}
-                </div>
-              )}
+              <div className="flex items-center gap-2">
+                <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: KIND_COLORS[hovered.kind].border }} />
+                <div className="font-semibold text-foreground">{hovered.label}</div>
+              </div>
+              {hovered.repoLabel && <div className="text-muted-foreground mt-0.5">{hovered.repoLabel}</div>}
+              {hovered.description && <div className="text-muted-foreground mt-1 leading-snug max-h-20 overflow-hidden text-ellipsis">{hovered.description}</div>}
             </div>
           )}
 
@@ -575,31 +450,53 @@ export default function ProjectGraphPlaceholder() {
               placeholder="Search nodes..."
             />
             <button
-              className="rounded-full border border-border bg-card px-3 py-1 text-xs"
+              className="rounded-full border px-3 py-1 text-xs transition-colors"
+              style={{ backgroundColor: "#69ff47", color: "#fff", borderColor: "#69ff47" }}
               onClick={handleSearch}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = "#fff";
+                e.currentTarget.style.color = "#69ff47";
+                e.currentTarget.style.borderColor = "#69ff47";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = "#69ff47";
+                e.currentTarget.style.color = "#fff";
+                e.currentTarget.style.borderColor = "#69ff47";
+              }}
             >
               Search
             </button>
           </div>
 
-          <div
-            ref={containerRef}
-            className="h-[74vh] min-h-[620px] max-h-[820px] w-full cursor-default"
-          />
+          <div ref={containerRef} className="h-[74vh] min-h-[620px] max-h-[820px] w-full cursor-default" />
 
           <div className="absolute left-3 bottom-3 z-10 flex items-center gap-2">
-            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={zoomIn}>
-              +
-            </button>
-            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={zoomOut}>
-              -
-            </button>
-            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={fit}>
-              Fit
-            </button>
-            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={resetView}>
-              Reset
-            </button>
+            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={zoomIn}>+</button>
+            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={zoomOut}>-</button>
+            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={fit}>Fit</button>
+            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={resetView}>Reset</button>
+          </div>
+
+          {/* Legend */}
+          <div className="absolute right-3 bottom-3 z-10">
+            <div className="bg-background/90 border border-border rounded-xl p-3 shadow-sm backdrop-blur">
+              <p className="text-xs font-medium text-muted-foreground mb-2">Node Types</p>
+              <div className="flex flex-wrap gap-2">
+                {(Object.keys(KIND_COLORS) as NodeKind[]).map((kind) => {
+                  const c = KIND_COLORS[kind];
+                  return (
+                    <div
+                      key={kind}
+                      className="flex items-center gap-2 px-2 py-1 rounded-md text-xs font-medium capitalize"
+                      style={{ backgroundColor: c.bg, color: "#0B1220" }}
+                    >
+                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: c.border }} />
+                      {kind}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -614,27 +511,28 @@ export default function ProjectGraphPlaceholder() {
           ) : (
             <div className="space-y-4">
               <div className="space-y-1">
-                <div className="font-mono text-sm font-medium">{selected.label}</div>
+                <div className="flex items-center gap-2">
+                  <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: KIND_COLORS[selected.kind].border }} />
+                  <div className="font-mono text-sm font-medium">{selected.label}</div>
+                </div>
+
                 <div className="text-xs text-muted-foreground font-mono">{selected.id}</div>
+                <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{selected.kind}</div>
+
                 {selected.repo && (
                   <div className="flex items-center gap-2 text-xs">
-                    <span
-                      className="h-3 w-3 rounded-full border border-border"
-                      style={{ backgroundColor: selected.repo.color }}
-                    />
+                    <span className="h-3 w-3 rounded-full border border-border" style={{ backgroundColor: selected.repo.color }} />
                     <span className="font-medium">{selected.repo.label}</span>
                   </div>
                 )}
               </div>
 
-              {selected.description && (
-                <p className="text-sm text-muted-foreground leading-relaxed">{selected.description}</p>
-              )}
+              {selected.description && <p className="text-sm text-muted-foreground leading-relaxed">{selected.description}</p>}
 
               {selected.meta && Object.keys(selected.meta).length > 0 && (
                 <div>
                   <div className="text-xs font-medium mb-1">Meta</div>
-                  <pre className="text-xs bg-muted p-3 rounded font-mono whitespace-pre-wrap">
+                  <pre className="text-xs bg-muted p-3 rounded font-mono whitespace-pre-wrap overflow-x-auto">
                     {JSON.stringify(selected.meta, null, 2)}
                   </pre>
                 </div>
