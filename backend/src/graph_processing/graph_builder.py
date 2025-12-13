@@ -1,16 +1,22 @@
 import json
 from chromadb import PersistentClient
-from src.core.config import get_settings
+from ..core.config import get_settings
 from pathlib import Path
+
 
 def normalize_path(path: str, cloning_dir: str) -> str:
     p = Path(path)
     return str(p.relative_to(cloning_dir)).replace("\\", "/")
 
+
 def extract_repo(path: str, cloning_dir: str) -> str:
     rel = Path(path).relative_to(cloning_dir)
     parts = rel.parts
     return parts[0] if len(parts) > 0 else ""
+
+def extract_name(path: str) -> str:
+    return path.split('/')[-1]
+
 
 def build_graph():
     settings = get_settings()
@@ -20,7 +26,7 @@ def build_graph():
         name=settings.COLLECTION_NAME
     )
 
-    results = collection.get(include=["ids", "documents", "metadatas"])
+    results = collection.get(include=["documents", "metadatas"])
 
     nodes = []
     edges = []
@@ -37,14 +43,16 @@ def build_graph():
         file_path = metadata.get("path", doc_id)
         norm_path = normalize_path(file_path, str(cloning_dir))
         repo = extract_repo(file_path, str(cloning_dir))
+        name = extract_name(doc_id)
 
         node = {
-            "id": norm_path,
+            "id": doc_id,
+            "name": name,
             "repo": repo
         }
 
         nodes.append(node)
-        node_map[norm_path] = node
+        node_map[doc_id] = node
 
     for doc_id, document, metadata in zip(
         results["ids"],
@@ -58,11 +66,11 @@ def build_graph():
 
         for imp in imports:
             try:
-                target = normalize_path(imp, str(cloning_dir))
+                target = imp
             except Exception:
                 continue
             if target in node_map:
-                edges.append({"from": src_path, "to": target, "type": "import"})
+                edges.append({"from": doc_id, "to": target, "type": "import"})
 
         repo_http = metadata.get("repo_http", [])
         if isinstance(repo_http, str):
@@ -73,14 +81,15 @@ def build_graph():
             if not target_file:
                 continue
             try:
-                target = normalize_path(target_file, str(cloning_dir))
+                target = target_file
             except Exception:
                 continue
             if target in node_map:
-                edges.append({"from": src_path, "to": target, "type": "http"})
+                edges.append({"from": doc_id, "to": target, "type": "http"})
 
     graph = {"nodes": nodes, "edges": edges}
     with open("graph.json", "w", encoding="utf-8") as f:
         json.dump(graph, f, indent=2)
 
     print(f"Graph written: {len(nodes)} nodes, {len(edges)} edges")
+

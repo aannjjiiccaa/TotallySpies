@@ -1,9 +1,10 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from src.graph_processing.graph_builder import build_graph
-from src.core.config import get_settings
 from pathlib import Path
 import json
+
+from TotallySpies.backend.src.core.config import get_settings
+from TotallySpies.backend.src.graph_processing.graph_builder import build_graph
 
 router = APIRouter()
 
