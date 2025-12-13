@@ -1,12 +1,23 @@
 from typing import List, Dict
 from .embedder import get_embedder
 
+ENTRYPOINT_KEYWORDS = {
+    "run", "start", "entry", "main", "initialize", "boot",
+    "launch", "execute", "cli", "server", "app"
+}
+
+
+ENTRYPOINT_KEYWORDS = {
+    "run", "start", "entry", "main", "initialize", "boot",
+    "launch", "execute", "cli", "server", "app"
+}
+
 
 class ChromaRetriever:
     def __init__(self, collection, top_k: int = 8):
         self.collection = collection
         self.top_k = top_k
-        self.embedder = get_embedder()
+        self.embedder = get_embedder('search_query')
 
     def retrieve(self, query: str) -> List[Dict]:
         """
