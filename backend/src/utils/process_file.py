@@ -129,6 +129,7 @@ def add_to_base(
             "symbols_used": json.dumps(connections.get("symbols_used", [])),
             "http_calls": json.dumps(connections.get("http_calls", [])),
             "routes": json.dumps(connections.get("routes", [])),
+            "repo_http": json.dumps([])
         })
 
     # --- Store in Chroma ---

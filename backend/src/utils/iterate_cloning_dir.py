@@ -6,11 +6,8 @@ from chromadb.api.models.Collection import Collection
 
 def iter_chroma_nodes(
     collection: Collection,
-    include_embeddings: bool = False,
 ) -> Iterator[Dict[str, Any]]:
-    include = ["documents", "metadatas"]
-    if include_embeddings:
-        include.append("embeddings")
+    include = ["documents", "metadatas", "embeddings"]
 
     results = collection.get(include=include)
 
@@ -24,7 +21,7 @@ def iter_chroma_nodes(
             "id": ids[i],
             "document": documents[i],
             "metadata": metadatas[i],
-            "embedding": embeddings[i] if include_embeddings else None,
+            "embedding": embeddings[i]
         }
 
 
