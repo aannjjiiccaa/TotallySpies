@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { registerUser } from "@/services/api.service";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -10,10 +11,27 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, just navigate to dashboard
-    navigate("/dashboard");
+    if (!email || !password || !confirmPassword) {
+      alert("Please fill in all fields.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+    try {
+      const result = await registerUser({ email, password });
+      if (result) {
+        alert("Registration successful! Please sign in.");
+        navigate("/login");
+      } else {
+        alert("Registration failed");
+      }
+    } catch (error) {
+      alert("Registration error");
+    }
   };
 
   return (
