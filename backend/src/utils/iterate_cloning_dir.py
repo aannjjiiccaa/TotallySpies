@@ -36,3 +36,13 @@ def iter_chroma_entries(collection, batch_size=100):
             }
 
         offset += batch_size
+
+
+def iter_dirs_bottom_up(root: str):
+    """
+    Yield all directories bottom-up (deepest first).
+    """
+    root = Path(root).resolve()
+
+    for dirpath, _, _ in os.walk(root, topdown=False):
+        yield Path(dirpath)

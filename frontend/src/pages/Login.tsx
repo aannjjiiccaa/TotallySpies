@@ -3,16 +3,30 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { loginUser } from "@/services/api.service";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, just navigate to dashboard
-    navigate("/dashboard");
+    if (!email || !password) {
+      alert("Please enter both email and password.");
+      return;
+    }
+    try {
+      const result = await loginUser({ email, password });
+      if (result) {
+        localStorage.setItem("email", email);
+        navigate("/dashboard");
+      } else {
+        alert("Login failed");
+      }
+    } catch (error) {
+      alert("Login error");
+    }
   };
 
   return (
