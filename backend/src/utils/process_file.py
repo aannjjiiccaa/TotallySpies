@@ -1,4 +1,4 @@
-from src.utils.parsers import detect_language, parse_python
+from .parsers import detect_language, parse_python
 from ..rag.embedder import get_embedder
 from ..rag.llm import get_llm
 from pathlib import Path
