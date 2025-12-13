@@ -31,3 +31,4 @@ ai_api/app/data/bars_db
 frontend/node_modules/
 backend/src/core/
 backend/src/cloning_dir/
+backend/src/sqldb/connection.py
