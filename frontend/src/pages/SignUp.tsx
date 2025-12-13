@@ -7,30 +7,33 @@ import { registerUser } from "@/services/api.service";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password || !confirmPassword) {
-      alert("Please fill in all fields.");
+    if (!username || !email || !password || !confirmPassword) {
+      setError("Please fill in all fields.");
       return;
     }
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      setError("Passwords do not match.");
       return;
     }
+    setError("");
     try {
-      const result = await registerUser({ email, password });
+      const result = await registerUser({ username, email, password });
       if (result) {
         alert("Registration successful! Please sign in.");
         navigate("/login");
       } else {
-        alert("Registration failed");
+        setError("Registration failed");
       }
     } catch (error) {
-      alert("Registration error");
+      setError("Registration error");
     }
   };
 
@@ -62,6 +65,19 @@ const SignUp = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="username" className="text-sm font-medium">
+              Username
+            </Label>
+            <Input
+              id="username"
+              type="text"
+              placeholder="your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="h-10"
+            />
+          </div>
           <div className="space-y-2">
             <Label htmlFor="email" className="text-sm font-medium">
               Email
@@ -104,6 +120,11 @@ const SignUp = () => {
             />
           </div>
 
+          {error && (
+            <div className="mb-2 text-center text-sm font-medium text-orange-600">
+              {error}
+            </div>
+          )}
           <Button type="submit" className="w-full" size="lg">
             Sign up
           </Button>

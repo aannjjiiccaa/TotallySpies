@@ -9,23 +9,25 @@ const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      alert("Please enter both email and password.");
+      setError("Please enter both email and password.");
       return;
     }
+    setError("");
     try {
       const result = await loginUser({ email, password });
       if (result) {
         localStorage.setItem("email", email);
         navigate("/dashboard");
       } else {
-        alert("Login failed");
+        setError("Login failed");
       }
     } catch (error) {
-      alert("Login error");
+      setError("Login error");
     }
   };
 
@@ -85,6 +87,11 @@ const Login = () => {
             />
           </div>
 
+          {error && (
+            <div className="mb-2 text-center text-sm font-medium text-orange-600">
+              {error}
+            </div>
+          )}
           <Button type="submit" className="w-full" size="lg">
             Sign in
           </Button>

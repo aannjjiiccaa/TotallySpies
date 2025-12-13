@@ -50,7 +50,12 @@ const Dashboard = () => {
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => navigate("/login")}>Logout</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                  localStorage.removeItem("email");
+                  navigate("/login");
+                }}>
+                  Logout
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
