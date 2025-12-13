@@ -1,0 +1,34 @@
+node_modules/
+.env
+web
+scraping
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments (uv or venv)
+.venv/
+venv/
+uv/
+.ai_api-venv/
+.ai_api/venv/
+*/.venv/
+
+# uv cache
+.uv/
+.uv_cache/
+uv.lock
+
+# Local settings / secrets
+.env
+.env.*
+*.env
+
+ai_api/app/data/raw
+ai_api/app/data/bars_db
+frontend/node_modules/
+backend/src/core/
+backend/src/cloning_dir/
+backend/src/sqldb/connection.py
