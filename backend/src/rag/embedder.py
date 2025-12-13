@@ -50,6 +50,10 @@ class APIEmbedder(Embedder):
 
 
 @lru_cache(maxsize=1)
-def get_embedder():
+def get_embedder(input_type="search_document"):
     settings = get_settings()
-    return APIEmbedder(settings.COHERE_API_KEY, settings.COHERE_EMBEDDER_MODEL)
+    return APIEmbedder(
+        settings.COHERE_API_KEY,
+        settings.COHERE_EMBEDDER_MODEL,
+        input_type=input_type,
+    )

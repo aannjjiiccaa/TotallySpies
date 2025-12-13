@@ -4,8 +4,8 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     # === Paths ===
-    PERSIST_DIR: str = r"C:\Users\mestr\OneDrive\Desktop\TotallySpies\TotallySpies\backend\src\data"
-    CLONING_DIR: str = r"C:\Users\mestr\OneDrive\Desktop\TotallySpies\TotallySpies\backend\src\cloning_dir"
+    PERSIST_DIR: str = "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/data"
+    CLONING_DIR: str = "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir"
 
     # === Chroma ===
     COLLECTION_NAME: str = "files_vdb"
@@ -16,12 +16,12 @@ class Settings(BaseSettings):
     # === Groq ===
     GROQ_API_KEY: str
     GROQ_MODEL: str = "openai/gpt-oss-20b"
-    TEMPERATURE: float = 0.5
+    TEMPERATURE: float = 0.2
 
     # === Cohere ===
     COHERE_API_KEY: str
     COHERE_EMBEDDER_MODEL: str = "embed-english-v3.0"
-    BATCH_SIZE: int = 32
+    BATCH_SIZE: int = 3
 
 
 

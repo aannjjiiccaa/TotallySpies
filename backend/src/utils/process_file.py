@@ -108,9 +108,11 @@ def add_to_base(
     metadata = {
         "type": node_type,
         "path": str(path),
-        "parent": parent,
         "short": short_description,
     }
+
+    if parent is not None:
+        metadata["parent"] = parent
 
     # --- File-specific metadata ---
     if node_type == "file" and connections is not None:
@@ -123,6 +125,8 @@ def add_to_base(
             "imports": json.dumps(connections.get("imports", [])),
             "symbols_defined": json.dumps(connections.get("symbols_defined", [])),
             "symbols_used": json.dumps(connections.get("symbols_used", [])),
+            "http_calls": json.dumps(connections.get("http_calls", [])),
+            "routes": json.dumps(connections.get("routes", [])),
         })
 
     # --- Store in Chroma ---
@@ -160,8 +164,18 @@ def process_directory(collection, dir_path: str):
     results = collection.get(
         where={
             "$or": [
-                {"type": "file", "parent": dir_path},
-                {"type": "dir", "parent": dir_path},
+                {
+                    "$and": [
+                        {"type": "file"},
+                        {"parent": dir_path},
+                    ]
+                },
+                {
+                    "$and": [
+                        {"type": "dir"},
+                        {"parent": dir_path},
+                    ]
+                },
             ]
         },
         include=["metadatas"],
