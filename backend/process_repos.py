@@ -3,7 +3,7 @@ from sentence_transformers import SentenceTransformer
 from src.core.config import get_settings
 from src.rag.embedder import get_embedder
 from src.rag.llm import get_llm
-from src.utils.iterate_cloning_dir import iter_files
+from src.utils.iterate_cloning_dir import iter_files, iter_chroma_entries
 from src.utils.process_file import get_description, get_embedding, get_connections
 import os
 
@@ -20,6 +20,9 @@ def main():
         description = get_description(file)
         embeddings = get_embedding(file)
         connections = get_connections(file)
+
+    for entry in iter_chroma_entries(collection):
+        print(entry["id"], entry["metadata"]["path"])
 
 
 
