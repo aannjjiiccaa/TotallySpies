@@ -192,7 +192,7 @@ def extract_routes_from_function(func_node: ast.FunctionDef, file_path: str, cla
                 route_info.update({
                     "function_name": func_node.name,
                     "class_name": class_name,
-                    "file": file_path,
+                    "file": normalize_path(file_path),
                     "lineno": func_node.lineno,
                     "full_path": f"{class_name}.{func_node.name}" if class_name else func_node.name
                 })
