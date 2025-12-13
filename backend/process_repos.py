@@ -14,10 +14,14 @@ embedder = get_embedder()
 
 
 def main():
+    client = PersistentClient(path=settings.PERSIST_DIR)
+    collection = client.get_or_create_collection(name=settings.COLLECTION_NAME)
     for file in iter_files(settings.CLONING_DIR):
-        description = get_description()
-        embeddings = get_embedding()
-        connections = get_connections()
+        description = get_description(file)
+        embeddings = get_embedding(file)
+        connections = get_connections(file)
+
+
 
 
 

@@ -1,8 +1,8 @@
-def get_connections():
+def get_connections(file):
     pass
 
-def get_embedding():
+def get_embedding(file):
     pass
 
-def get_description():
+def get_description(file):
     pass
