@@ -4,11 +4,11 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     # === Paths ===
-    PERSIST_DIR: str = "/Users/nemanjaudovic/PycharmProjects/bar_review/where/ai_api/app/data/bars_db"
-    ENTRIES_DIR: str = "/Users/nemanjaudovic/PycharmProjects/bar_review/where/ai_api/app/data/raw"
+    PERSIST_DIR: str = "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/data"
+    CLONING_DIR: str = "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir"
 
     # === Chroma ===
-    COLLECTION_NAME: str = "reviews_vdb"
+    COLLECTION_NAME: str = "files_vdb"
 
     # === Embeddings ===
     EMBEDDER_MODEL_NAME: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
