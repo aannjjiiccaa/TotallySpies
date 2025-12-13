@@ -7,12 +7,11 @@ from src.utils.process_file import get_description, get_embedding, get_connectio
 import os
 
 
-settings = get_settings()
-llm = get_llm()
-embedder = get_embedder()
-
 
 def main():
+    settings = get_settings()
+    llm = get_llm()
+    embedder = get_embedder()
     client = PersistentClient(path=settings.PERSIST_DIR)
     collection = client.get_or_create_collection(
         name=settings.COLLECTION_NAME

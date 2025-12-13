@@ -1,225 +1,130 @@
 from pathlib import Path
+from typing import List
+from chromadb.api.models.Collection import Collection
 from .llm import get_llm
 
+def build_system_context(
+    collection: Collection,
+    max_dirs_per_repo: int = 5,
+    max_entrypoints_per_repo: int = 3,
+) -> str:
 
-def is_under_repo(path: str, repo_root: str) -> bool:
-    repo_root = repo_root.rstrip("/") + "/"
-    return path.startswith(repo_root)
-
-
-def compress_directory_descriptions(dirs, max_items=15):
-    """
-    Compress many directory descriptions into a short architectural overview.
-    """
-    llm = get_llm()
-
-    dirs = dirs[:max_items]
-
-    text = "\n".join(f"- {path}: {desc}" for path, desc in dirs)
-
-    prompt = f"""
-    Summarize the following directory purposes into a concise architectural overview.
-    Preserve key components and responsibilities.
-    
-    {text}
-    """
-
-    return llm.generate(prompt)
-
-
-def build_repo_context(
-    collection,
-    repo_root: str,
-    max_dirs: int = 50,
-    max_entrypoints: int = 20,
-):
-    repo_root = str(Path(repo_root).resolve())
-
-    # ------------------
-    # Repo short description
-    # ------------------
-    repo_res = collection.get(ids=[repo_root], include=["metadatas"])
-    repo_meta = (repo_res.get("metadatas") or [{}])[0]
-    repo_desc = repo_meta.get(
-        "short",
-        "Repository composed of multiple cooperating subsystems."
-    )
-
-    # ------------------
-    # Directories (scoped, SHORT ONLY)
-    # ------------------
-    dirs_res = collection.get(
-        where={"type": "dir"},
+    # ---------- Load repos ----------
+    repo_res = collection.get(
+        where={"type": "repo"},
         include=["metadatas"],
     )
 
-    dirs = sorted(
-        [
-            (m["path"], m["short"])
-            for m in (dirs_res.get("metadatas") or [])
-            if m
-            and m.get("path")
-            and m.get("short")
-            and is_under_repo(m["path"], repo_root)
-        ],
-        key=lambda x: (x[0].count("/"), x[0]),
-    )[:max_dirs]
+    repos = repo_res.get("metadatas", [])
+    if not repos:
+        return "No repositories found."
 
-    dir_overview = compress_directory_descriptions(dirs)
+    system_blocks: List[str] = []
 
-    # ------------------
-    # Entry points (scoped, SHORT ONLY)
-    # ------------------
-    ep_res = collection.get(
-        where={"type": "file", "role": "entrypoint"},
-        include=["metadatas"],
-    )
+    for repo_meta in repos:
+        repo_path = repo_meta["path"]
+        repo_name = Path(repo_path).name
+        repo_short = repo_meta.get("short", "Repository component.")
 
-    entrypoints = sorted(
-        [
-            (m["path"], m["short"])
-            for m in (ep_res.get("metadatas") or [])
-            if m
-            and m.get("path")
-            and m.get("short")
-            and is_under_repo(m["path"], repo_root)
-        ],
-        key=lambda x: x[0],
-    )[:max_entrypoints]
-
-    return repo_desc, dir_overview, entrypoints
-
-
-def generate_full_repo_summary(collection, repo_root: str) -> str:
-    llm = get_llm()
-
-    repo_desc, dir_overview, entrypoints = build_repo_context(
-        collection, repo_root
-    )
-
-    ep_section = "\n".join(
-        f"- {path}: {desc}" for path, desc in entrypoints
-    )
-
-    prompt = f"""
-    You are writing high-quality developer documentation for a codebase.
-    
-    Repository overview:
-    {repo_desc}
-    
-    Architecture overview (derived from directories):
-    {dir_overview}
-    
-    Entry points:
-    {ep_section}
-    
-    Write a detailed README-style summary with the following sections:
-    
-    1) What this repository does
-    2) Architecture overview
-    3) Key entry points and execution flow
-    4) How to run / use (best effort, clearly label assumptions)
-    5) Where to make changes
-    6) Glossary of important concepts
-    
-    Constraints:
-    - Do not invent commands or technologies.
-    - Base reasoning strictly on provided information.
-    - Prefer clarity and structure.
-    """
-
-    return llm.generate(prompt)
-
-
-def generate_repo_capsule(collection, repo_root: str) -> str:
-    llm = get_llm()
-
-    repo_desc, dir_overview, entrypoints = build_repo_context(
-        collection, repo_root
-    )
-
-    ep_list = "\n".join(path for path, _ in entrypoints)
-
-    prompt = f"""
-    Summarize the following repository into a short architectural capsule.
-    
-    Repository description:
-    {repo_desc}
-    
-    Architecture overview:
-    {dir_overview}
-    
-    Entry points:
-    {ep_list}
-    
-    Return:
-    - Purpose
-    - Main responsibilities
-    - How it is likely used by other repositories
-    (Keep it concise.)
-    """
-
-    return llm.generate(prompt)
-
-
-def build_multi_repo_context(collection, repo_roots: list[str]):
-    contexts = []
-
-    for repo_root in repo_roots:
-        summary = generate_full_repo_summary(collection, repo_root)
-        contexts.append(
-                f"""
-    REPOSITORY: {repo_root}
-    
-    {summary}
-    """
-            )
-
-    return "\n\n".join(contexts)
-
-
-def generate_multi_repo_overview(collection, repo_roots: list[str]) -> str:
-    llm = get_llm()
-
-    capsules = []
-
-    for repo_root in repo_roots:
-        capsule = generate_repo_capsule(collection, repo_root)
-        capsules.append(
-            f"""
-REPOSITORY: {repo_root}
-
-{capsule}
-"""
+        # ---------- Entrypoints ----------
+        ep_res = collection.get(
+            where={
+                "$and": [
+                    {"type": "file"},
+                    {"role": "entrypoint"},
+                    {"path": {"$contains": repo_path}},
+                ]
+            },
+            include=["metadatas"],
         )
 
-    repo_context = "\n\n".join(capsules)
+        entrypoints = []
+        for m in ep_res.get("metadatas", [])[:max_entrypoints_per_repo]:
+            entrypoints.append(
+                f"- {Path(m['path']).name}: {m.get('short', '')}"
+            )
+
+        ep_block = (
+            "\n".join(entrypoints)
+            if entrypoints
+            else "- (No explicit entrypoints detected)"
+        )
+
+        # ---------- Top-level directories ----------
+        dir_res = collection.get(
+            where={
+                "$and": [
+                    {"type": "dir"},
+                    {"parent": repo_path},
+                ]
+            },
+            include=["metadatas"],
+        )
+
+        dirs = []
+        for m in dir_res.get("metadatas", [])[:max_dirs_per_repo]:
+            dirs.append(
+                f"- {Path(m['path']).name}: {m.get('short', '')}"
+            )
+
+        dir_block = (
+            "\n".join(dirs)
+            if dirs
+            else "- (No top-level directories)"
+        )
+
+        # ---------- Build repo block ----------
+        repo_block = f"""
+        REPOSITORY: {repo_name}
+        
+        Purpose:
+        {repo_short}
+        
+        Entrypoints:
+        {ep_block}
+        
+        Architecture:
+        {dir_block}
+        """.strip()
+
+        system_blocks.append(repo_block)
+
+    return "\n\n".join(system_blocks)
+
+
+
+def generate_system_summary(system_context: str) -> str:
+    """
+    Generate a high-level system summary from structured repository context.
+    """
+    llm = get_llm()
 
     prompt = f"""
-    You are analyzing a system composed of multiple software repositories.
-    
-    Below are architectural capsules for each repository.
-    
-    {repo_context}
-    
-    Explain how these repositories work together.
-    
-    Include:
-    1) System-level overview
-    2) Role of each repository
-    3) Interactions and dependencies
-    4) Entry points and execution flow
-    5) Developer workflow across repos
-    6) Assumptions and inferred relationships (clearly labeled)
-    
-    Constraints:
-    - Do not invent integrations.
-    - Reason strictly from provided information.
-    - Prefer clarity over certainty.
-    """
+        You are a senior software architect writing documentation for a multi-repository system.
+        
+        Below is structured information extracted from the codebase.
+        It includes repository purposes, entrypoints, and top-level architecture.
+        
+        SYSTEM CONTEXT:
+        {system_context}
+        
+        TASK:
+        Write a clear, well-structured system-level summary that includes:
+        
+        1) Overall system purpose
+        2) Role of each repository
+        3) How execution flows through the system (starting from entrypoints)
+        4) How repositories interact with each other
+        5) Where a new developer should start exploring the codebase
+        
+        RULES:
+        - Base your explanation STRICTLY on the provided context.
+        - Do NOT invent functionality, APIs, or integrations.
+        - If something is unclear, state assumptions explicitly.
+        - Prefer clarity and structure over verbosity.
+        - Do NOT repeat the input verbatim.
+        
+        Write in professional technical documentation style.
+        """
 
     return llm.generate(prompt)
-
-
-
-

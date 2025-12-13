@@ -35,7 +35,8 @@ def get_connections(file):
         "packages": [],
         "symbols_defined": [],
         "symbols_used": [],
-        "http_calls": []
+        "http_calls": [],
+        "routes": []
     }
 
 
@@ -119,7 +120,8 @@ def add_to_base(
     if node_type == "file" and connections is not None:
         filename = path.name
         role = "entrypoint" if filename in ENTRYPOINT_FILENAMES else "module"
-
+        print(connections.get("http_calls", []))
+        print(connections.get("symbols_used", []))
         metadata.update({
             "role": role,
             "language": connections.get("language"),
@@ -128,6 +130,7 @@ def add_to_base(
             "symbols_used": json.dumps(connections.get("symbols_used", [])),
             "http_calls": json.dumps(connections.get("http_calls", [])),
             "routes": json.dumps(connections.get("routes", [])),
+            "repo_http": json.dumps([])
         })
 
     # --- Store in Chroma ---

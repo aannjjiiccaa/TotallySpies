@@ -1,5 +1,40 @@
 from pathlib import Path
 import os
+from typing import Iterator, Dict, Any
+from chromadb.api.models.Collection import Collection
+
+
+def iter_chroma_nodes(
+    collection: Collection,
+) -> Iterator[Dict[str, Any]]:
+    include = ["documents", "metadatas", "embeddings"]
+
+    results = collection.get(include=include)
+
+    ids = results.get("ids", [])
+    documents = results.get("documents", [])
+    metadatas = results.get("metadatas", [])
+    embeddings = results.get("embeddings", [])
+
+    for i in range(len(ids)):
+        yield {
+            "id": ids[i],
+            "document": documents[i],
+            "metadata": metadatas[i],
+            "embedding": embeddings[i]
+        }
+
+
+def update_chroma_node(
+    collection,
+    node: dict,
+):
+    collection.upsert(
+        ids=[node["id"]],
+        documents=[node["document"]],
+        metadatas=[node["metadata"]],
+        embeddings=[node["embedding"]] if node["embedding"] is not None else None,
+    )
 
 
 def iter_files(cloning_dir: str | Path):
