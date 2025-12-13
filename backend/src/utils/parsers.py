@@ -17,6 +17,7 @@ def detect_language(file_path):
 def parse_python(file_path):
     imports = set()
     defined = set()
+    packages = set()
     used = set()
 
     with open(file_path, "r", encoding="utf-8") as f:
@@ -27,12 +28,18 @@ def parse_python(file_path):
             for n in node.names:
                 module_name = n.name
                 abs_path = resolve_import_from_file(file_path, module_name)
-                imports.add(abs_path if abs_path else module_name)
+                if abs_path:
+                    imports.add(abs_path)
+                else:
+                    packages.add(module_name)
 
         elif isinstance(node, ast.ImportFrom):
             if node.module:
                 abs_path = resolve_import_from_file(file_path, node.module)
-                imports.add(abs_path if abs_path else node.module)
+                if abs_path:
+                    imports.add(abs_path)
+                else:
+                    packages.add(module_name)
 
         elif isinstance(node, ast.ClassDef):
             defined.add(node.name)
@@ -47,6 +54,7 @@ def parse_python(file_path):
     return {
         "language": "python",
         "imports": list(imports),
+        "packages": list(packages),
         "symbols_defined": list(defined),
         "symbols_used": list(used)
     }

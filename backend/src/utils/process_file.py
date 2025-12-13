@@ -26,6 +26,7 @@ def get_connections(file):
     return {
         "language": "unknown",
         "imports": [],
+        "packages": [],
         "symbols_defined": [],
         "symbols_used": []
     }
