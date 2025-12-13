@@ -1,44 +1,86 @@
+import json
+from chromadb import PersistentClient
+from src.core.config import get_settings
+from pathlib import Path
 
-def match_service(url, services):
-    if not url:
-        return None
+def normalize_path(path: str, cloning_dir: str) -> str:
+    p = Path(path)
+    return str(p.relative_to(cloning_dir)).replace("\\", "/")
 
-    for service, data in services.items():
-        for alias in data["aliases"]:
-            if alias in url:
-                return service
+def extract_repo(path: str, cloning_dir: str) -> str:
+    rel = Path(path).relative_to(cloning_dir)
+    parts = rel.parts
+    return parts[0] if len(parts) > 0 else ""
 
-    return None
+def build_graph():
+    settings = get_settings()
+    cloning_dir = Path(settings.CLONING_DIR)
+    client = PersistentClient(path=settings.PERSIST_DIR)
+    collection = client.get_or_create_collection(
+        name=settings.COLLECTION_NAME
+    )
 
-def build_graph(scan_results, services):
-    nodes = {}
+    results = collection.get(include=["ids", "documents", "metadatas"])
+
+    nodes = []
     edges = []
-    for repo in services:
-        nodes[repo] = {
-            "id": repo,
-            "type": "service"
+    node_map = {}
+
+    for doc_id, document, metadata in zip(
+        results["ids"],
+        results["documents"],
+        results["metadatas"]
+    ):
+        if metadata.get("type") != "file":
+            continue
+
+        file_path = metadata.get("path", doc_id)
+        norm_path = normalize_path(file_path, str(cloning_dir))
+        repo = extract_repo(file_path, str(cloning_dir))
+
+        node = {
+            "id": norm_path,
+            "repo": repo
         }
 
-    for r in scan_results:
-        caller = r["repo"]
+        nodes.append(node)
+        node_map[norm_path] = node
 
-        for call in r.get("http_calls", []):
-            target = match_service(call["url"], services)
+    for doc_id, document, metadata in zip(
+        results["ids"],
+        results["documents"],
+        results["metadatas"]
+    ):
+        src_path = normalize_path(metadata.get("path", doc_id), str(cloning_dir))
+        imports = metadata.get("imports", [])
+        if isinstance(imports, str):
+            imports = json.loads(imports)
 
-            if target and target != caller:
-                edges.append({
-                    "src": caller,
-                    "dst": target,
-                    "type": "calls_api",
-                    "confidence": "medium",
-                    "evidence": {
-                        "file": r["file"],
-                        "line": call["lineno"],
-                        "signal": call["url"]
-                    }
-                })
+        for imp in imports:
+            try:
+                target = normalize_path(imp, str(cloning_dir))
+            except Exception:
+                continue
+            if target in node_map:
+                edges.append({"from": src_path, "to": target, "type": "import"})
 
-    return {
-        "nodes": list(nodes.values()),
-        "edges": edges
-    }
+        repo_http = metadata.get("repo_http", [])
+        if isinstance(repo_http, str):
+            repo_http = json.loads(repo_http)
+
+        for call in repo_http:
+            target_file = call.get("target_file")
+            if not target_file:
+                continue
+            try:
+                target = normalize_path(target_file, str(cloning_dir))
+            except Exception:
+                continue
+            if target in node_map:
+                edges.append({"from": src_path, "to": target, "type": "http"})
+
+    graph = {"nodes": nodes, "edges": edges}
+    with open("graph.json", "w", encoding="utf-8") as f:
+        json.dump(graph, f, indent=2)
+
+    print(f"Graph written: {len(nodes)} nodes, {len(edges)} edges")

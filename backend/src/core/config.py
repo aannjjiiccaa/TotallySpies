@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     # === Paths ===
     PERSIST_DIR: str = "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/data"
     CLONING_DIR: str = "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir"
+    JSON_PATH: str = "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/graph_processing/graph.json"
 
     # === Chroma ===
     COLLECTION_NAME: str = "files_vdb"
