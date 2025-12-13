@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.src.sqldb.models import Base
-from backend.src.sqldb.db import engine
-from backend.src.routing import auth
+from src.sqldb.models import Base
+from src.sqldb.db import engine
+from src.routing import auth
 
 # kreira tabele ako ne postoje
 Base.metadata.create_all(bind=engine)
