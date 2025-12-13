@@ -1,12 +1,7 @@
-from src.utils.iterate_cloning_dir import iter_chroma_nodes, update_chroma_node
+import json
 from chromadb import PersistentClient
 from src.core.config import get_settings
-from src.rag.embedder import get_embedder
-from src.rag.llm import get_llm
-from src.utils.iterate_cloning_dir import iter_files, iter_chroma_entries, iter_dirs_bottom_up
-from src.utils.process_file import get_description, get_embedding, get_connections,  add_to_base, process_directory, flush_file_buffer
-import os
-
+from urllib.parse import urlparse
 
 def second_pass():
     settings = get_settings()
@@ -15,15 +10,90 @@ def second_pass():
         name=settings.COLLECTION_NAME
     )
 
-    for node in iter_chroma_nodes(collection):
-        new_node = find(node)
-        if new_node is not None:
-            update_chroma_node(new_node)
+    results = collection.get(include=["ids", "documents", "metadatas"])
 
+    for doc_id, document, metadata in zip(
+        results["ids"],
+        results["documents"],
+        results["metadatas"]
+    ):
+        http_calls = json.loads(metadata.get("http_calls", "[]"))
+        repo_http = json.loads(metadata.get("repo_http", "[]"))
 
+        if not http_calls:
+            continue
+        new_nodes = find(http_calls) 
 
+        if not new_nodes:
+            continue
 
+        repo_http.extend(new_nodes)
 
-def find(node):
-    """Return None if node doesnt need to be changed."""
-    return None
+        repo_http = list({
+            json.dumps(x, sort_keys=True)
+            for x in repo_http
+        })
+        repo_http = [json.loads(x) for x in repo_http]
+
+        metadata["repo_http"] = json.dumps(repo_http)
+        collection.upsert(
+            ids=[doc_id],
+            documents=[document],
+            metadatas=[metadata]
+        )
+
+def find(http_calls):
+    settings = get_settings()
+    client = PersistentClient(path=settings.PERSIST_DIR)
+
+    collection = client.get_or_create_collection(
+        name=settings.COLLECTION_NAME
+    )
+    new_nodes = []
+    for call in http_calls:
+        method = call.get("method")
+        url = call.get("url")
+
+        if not url:
+            continue
+
+        results = collection.get(include=["metadatas"])
+
+        for metadata in results["metadatas"]:
+            routes_raw = metadata.get("routes", "[]")
+
+            try:
+                routes = json.loads(routes_raw)
+            except Exception:
+                continue
+
+            for route in routes:
+                path = route.get("path")
+                decorator = route.get("decorator")
+
+                if not path:
+                    continue
+
+                if decorator==method and match(url, path):
+                    new_nodes.append({
+                        "target_file": route.get("file"),
+                        "url": url
+                    })
+
+    return new_nodes
+
+def match(url: str, route_path: str) -> bool:
+    if not url or not route_path:
+        return False
+    parsed = urlparse(url)
+    url_path = parsed.path
+    url_path = url_path.rstrip("/")
+    route_path = route_path.rstrip("/")
+
+    if route_path == "" or route_path == "/":
+        return url_path == "" or url_path == "/"
+
+    if url_path == route_path:
+        return True
+
+    return False
