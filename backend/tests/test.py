@@ -9,7 +9,7 @@ os.makedirs(CLONING_DIR, exist_ok=True)
 def main():
     for file in iter_files(CLONING_DIR):
         connections = get_connections(file)
-        print(connections['packages'])
+        print(connections['symbols_defined'])
 
 if __name__ == '__main__':
     main()

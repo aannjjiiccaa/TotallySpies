@@ -34,7 +34,8 @@ def get_connections(file):
         "imports": [],
         "packages": [],
         "symbols_defined": [],
-        "symbols_used": []
+        "symbols_used": [],
+        "http_calls": []
     }
 
 

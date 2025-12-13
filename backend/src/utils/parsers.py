@@ -1,6 +1,8 @@
 import ast
 import os
 
+from src.utils.url_extractor import URLExtractor
+
 HTTP_LIBS = {
     "requests",
     "httpx",
@@ -31,6 +33,8 @@ def parse_python(file_path):
 
     with open(file_path, "r", encoding="utf-8") as f:
         tree = ast.parse(f.read())
+    extractor = URLExtractor()
+    extractor.visit(tree)
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
@@ -63,7 +67,7 @@ def parse_python(file_path):
                 func_name = node.func.attr
 
                 if isinstance(base, ast.Name) and base.id in HTTP_LIBS:
-                    url = extract_url(node)
+                    url = extractor.extract_url(node)
                     http_calls.append({
                         "library": base.id,
                         "method": func_name,
@@ -101,20 +105,3 @@ def resolve_import_from_file(current_file_path, module_name):
         search_dir = parent
     
     return None
-
-def extract_url(call_node):
-    if not call_node.args:
-        return None
-
-    arg = call_node.args[0]
-
-    if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
-        return arg.value
-
-    if isinstance(arg, ast.Call):
-        if isinstance(arg.func, ast.Attribute):
-            if arg.func.attr == "getenv":
-                if arg.args and isinstance(arg.args[0], ast.Constant):
-                    return f"ENV:{arg.args[0].value}"
-
-    return "dynamic"
