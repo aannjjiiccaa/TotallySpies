@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const Login = () => {
+const SignUp = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +39,7 @@ const Login = () => {
             <h1 className="text-2xl font-semibold tracking-tight">CodeAtlas</h1>
           </div>
           <p className="text-sm text-muted-foreground">
-            Map your codebase. Onboard faster.
+            Create your account to map your codebase.
           </p>
         </div>
 
@@ -71,18 +72,32 @@ const Login = () => {
             />
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="confirm-password" className="text-sm font-medium">
+              Confirm Password
+            </Label>
+            <Input
+              id="confirm-password"
+              type="password"
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="h-10"
+            />
+          </div>
+
           <Button type="submit" className="w-full" size="lg">
-            Sign in
+            Sign up
           </Button>
         </form>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          Don't have an account?{" "}
-          <button className="text-primary hover:underline" onClick={() => navigate("/signup")}>Sign up</button>
+          Already have an account?{" "}
+          <button className="text-primary hover:underline" onClick={() => navigate("/login")}>Sign in</button>
         </p>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default SignUp;
