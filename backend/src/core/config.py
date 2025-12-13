@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     # === Cohere ===
     COHERE_API_KEY: str
     COHERE_EMBEDDER_MODEL: str = "embed-english-v3.0"
+    BATCH_SIZE: int = 32
 
 
 

@@ -43,39 +43,59 @@ def get_embedding(description):
     return embedder.embed(description)
 
 
-def get_description(file_path: str) -> str:
+def get_description(file_path: str) -> dict:
     llm = get_llm()
 
     path = Path(file_path)
     if not path.exists():
         raise FileNotFoundError(f"File not found: {file_path}")
 
-    code = path.read_text(encoding="utf-8")
+    code = path.read_text(encoding="utf-8", errors="ignore")
 
     prompt = f"""
-        You are a senior software engineer.
-        
-        Describe what the following code does so it can be understood for all levels of engineers.
-        Be concise and high-level.
-        Do NOT repeat the code.
-        Do NOT include markdown.
-        Do NOT include explanations unrelated to the code.
-        
-        CODE:
-        {code}
-        """
+    You are a senior software engineer analyzing a source code file.
+    
+    Return STRICT JSON with the following fields:
+    - "short": exactly ONE sentence describing the file’s purpose at a high level
+    - "detailed": a clear, structured explanation of what the file does (max 150 words)
+    
+    Rules:
+    - Do NOT repeat the code.
+    - Do NOT include markdown.
+    - Do NOT include information not inferable from the code.
+    - The "short" field must be suitable for architecture-level summaries.
+    
+    CODE:
+    {code}
+    """
 
-    return llm.generate(prompt)
+    response = llm.generate(prompt)
+
+    try:
+        return json.loads(response)
+    except json.JSONDecodeError:
+        # Fallback safety (important for hackathons)
+        return {
+            "short": response.strip().split(".")[0] + ".",
+            "detailed": response.strip(),
+        }
 
 
-def add_to_base(collection, description, embedding, connections, path):
+def add_to_base(
+    collection,
+    detailed_description: str,
+    embedding: list[float],
+    short_description: str,
+    connections: dict | None,
+    path: str | Path,
+):
     settings = get_settings()
 
     path = Path(path).resolve()
-    repo_root = Path(settings.CLONING_DIR).resolve()
+    cloning_root = Path(settings.CLONING_DIR).resolve()
 
     # --- Determine node type ---
-    if path == repo_root:
+    if path.is_dir() and path.parent == cloning_root:
         node_type = "repo"
         parent = None
     elif path.is_dir():
@@ -89,13 +109,12 @@ def add_to_base(collection, description, embedding, connections, path):
         "type": node_type,
         "path": str(path),
         "parent": parent,
+        "short": short_description,
     }
 
     # --- File-specific metadata ---
     if node_type == "file" and connections is not None:
         filename = path.name
-
-        # Determine role
         role = "entrypoint" if filename in ENTRYPOINT_FILENAMES else "module"
 
         metadata.update({
@@ -106,71 +125,101 @@ def add_to_base(collection, description, embedding, connections, path):
             "symbols_used": json.dumps(connections.get("symbols_used", [])),
         })
 
+    # --- Store in Chroma ---
     collection.add(
         ids=[str(path)],
-        documents=[description],
+        documents=[detailed_description],
         embeddings=[embedding],
         metadatas=[metadata],
     )
 
 
 def flush_file_buffer(collection, buffer, embedder):
-    texts = [item["description"] for item in buffer]
+    # Embed ONLY detailed descriptions
+    detailed_texts = [
+        item["description"]["detailed"] for item in buffer
+    ]
 
-    # ONE Cohere API call here
-    embeddings = embedder.embed(
-        texts=texts,
-        model="embed-english-v3.0",
-        input_type="search_document",
-    ).embeddings
+    detailed_embeddings = embedder.embed(detailed_texts)
 
-    for item, embedding in zip(buffer, embeddings):
+    for item, embedding in zip(buffer, detailed_embeddings):
         add_to_base(
             collection=collection,
-            description=item["description"],
+            detailed_description=item["description"]["detailed"],
+            short_description=item["description"]["short"],
             embedding=embedding,
             connections=item["connections"],
-            file=item["file"],
+            path=item["file"],
         )
 
 
 def process_directory(collection, dir_path: str):
     dir_path = str(Path(dir_path).resolve())
 
-    # Get immediate children: files + dirs
+    # Get immediate children (files + dirs)
     results = collection.get(
         where={
             "$or": [
                 {"type": "file", "parent": dir_path},
                 {"type": "dir", "parent": dir_path},
             ]
-        }
+        },
+        include=["metadatas"],
     )
 
-    descriptions = results.get("documents", [])
+    metadatas = results.get("metadatas", [])
 
-    if not descriptions:
-        # empty directory → skip
+    # Collect SHORT summaries from children
+    short_children = [
+        m["short"]
+        for m in metadatas
+        if m and m.get("short")
+    ]
+
+    if not short_children:
+        # Empty directory → skip
         return
 
     llm = get_llm()
     embedder = get_embedder()
 
+    # ---------- Generate directory summaries ----------
     prompt = f"""
-        Describe the purpose of this directory based on its contents.
-        Be concise and high-level.
-        
-        CONTENTS:
-        {chr(10).join(descriptions)}
-        """
+    You are analyzing a source code directory.
+    
+    Based on the following brief descriptions of its contents, return STRICT JSON:
+    
+    - "short": one sentence describing the directory’s overall purpose
+    - "detailed": a clear architectural explanation of the directory’s role (max 120 words)
+    
+    Rules:
+    - Do NOT repeat the inputs verbatim.
+    - Do NOT invent functionality.
+    - Do NOT include markdown.
+    
+    CONTENTS:
+    {chr(10).join(f"- {s}" for s in short_children)}
+    """
 
-    description = llm.generate(prompt)
-    embedding = embedder.embed([description])[0]
+    response = llm.generate(prompt)
 
-    # connections = None (dirs do not have connections)
+    try:
+        desc = json.loads(response)
+    except Exception:
+        # Safety fallback
+        desc = {
+            "short": short_children[0],
+            "detailed": response.strip(),
+        }
+
+    # ---------- Embed ONLY detailed description ----------
+    embedding = embedder.embed(desc["detailed"])[0]
+
+    # ---------- Store directory via add_to_base ----------
     add_to_base(
         collection=collection,
-        description=description,
+        detailed_description=desc["detailed"],
+        short_description=desc["short"],
         embedding=embedding,
         connections=None,
         path=dir_path,

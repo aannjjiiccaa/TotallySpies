@@ -31,11 +31,9 @@ class GroqLLM(LLM):
         response = self._llm.invoke(prompt)
         return response.content
 
-
     def chat(self, messages: List[Dict[str, str]]) -> str:
         response = self._llm.invoke(messages)
         return response.content
-
 
 
 @lru_cache(maxsize=1)

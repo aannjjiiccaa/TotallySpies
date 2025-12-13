@@ -36,47 +36,52 @@ def build_repo_context(
     repo_root = str(Path(repo_root).resolve())
 
     # ------------------
-    # Repo description
+    # Repo short description
     # ------------------
-    repo_res = collection.get(ids=[repo_root])
-    repo_desc = (repo_res.get("documents") or [""])[0]
-    if not repo_desc:
-        repo_desc = "Repository composed of multiple cooperating subsystems."
+    repo_res = collection.get(ids=[repo_root], include=["metadatas"])
+    repo_meta = (repo_res.get("metadatas") or [{}])[0]
+    repo_desc = repo_meta.get(
+        "short",
+        "Repository composed of multiple cooperating subsystems."
+    )
 
     # ------------------
-    # Directories (scoped)
+    # Directories (scoped, SHORT ONLY)
     # ------------------
-    dirs_res = collection.get(where={"type": "dir"})
-    dir_docs = dirs_res.get("documents") or []
-    dir_meta = dirs_res.get("metadatas") or []
+    dirs_res = collection.get(
+        where={"type": "dir"},
+        include=["metadatas"],
+    )
 
     dirs = sorted(
         [
-            (m["path"], d)
-            for m, d in zip(dir_meta, dir_docs)
+            (m["path"], m["short"])
+            for m in (dirs_res.get("metadatas") or [])
             if m
             and m.get("path")
+            and m.get("short")
             and is_under_repo(m["path"], repo_root)
         ],
         key=lambda x: (x[0].count("/"), x[0]),
     )[:max_dirs]
 
-    # Compress dirs to avoid long context
     dir_overview = compress_directory_descriptions(dirs)
 
     # ------------------
-    # Entry points (scoped)
+    # Entry points (scoped, SHORT ONLY)
     # ------------------
-    ep_res = collection.get(where={"type": "file", "role": "entrypoint"})
-    ep_docs = ep_res.get("documents") or []
-    ep_meta = ep_res.get("metadatas") or []
+    ep_res = collection.get(
+        where={"type": "file", "role": "entrypoint"},
+        include=["metadatas"],
+    )
 
     entrypoints = sorted(
         [
-            (m["path"], d)
-            for m, d in zip(ep_meta, ep_docs)
+            (m["path"], m["short"])
+            for m in (ep_res.get("metadatas") or [])
             if m
             and m.get("path")
+            and m.get("short")
             and is_under_repo(m["path"], repo_root)
         ],
         key=lambda x: x[0],

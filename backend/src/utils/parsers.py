@@ -21,6 +21,7 @@ def detect_language(file_path):
     else:
         return "unknown"
 
+
 def parse_python(file_path):
     imports = set()
     defined = set()

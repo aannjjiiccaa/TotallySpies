@@ -3,6 +3,8 @@ from sentence_transformers import SentenceTransformer
 from abc import ABC, abstractmethod
 from typing import List
 from ..core.config import get_settings
+import cohere
+from typing import List, Union
 
 
 class Embedder(ABC):
@@ -20,19 +22,34 @@ class LocalEmbedder(Embedder):
 
 
 class APIEmbedder(Embedder):
-    def __init__(self, client, model: str):
-        self.client = client
+    def __init__(
+        self,
+        api_key: str,
+        model: str = "embed-english-v3.0",
+        input_type: str = "search_document",
+    ):
+        self.client = cohere.Client(api_key)
         self.model = model
+        self.input_type = input_type
 
-    def embed(self, texts):
-        response = self.client.embeddings.create(
+    def embed(self, texts: Union[str, List[str]]) -> List[List[float]]:
+        """
+        Embed one or many texts using Cohere.
+        Always returns a list of embeddings.
+        """
+        if isinstance(texts, str):
+            texts = [texts]
+
+        response = self.client.embed(
+            texts=texts,
             model=self.model,
-            input=texts
+            input_type=self.input_type,
         )
-        return [item.embedding for item in response.data]
+
+        return response.embeddings
 
 
 @lru_cache(maxsize=1)
 def get_embedder():
     settings = get_settings()
-    return LocalEmbedder(settings.EMBEDDER_MODEL_NAME)
+    return APIEmbedder(settings.COHERE_API_KEY, settings.COHERE_EMBEDDER_MODEL)
