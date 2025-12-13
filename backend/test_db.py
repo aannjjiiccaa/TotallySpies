@@ -1,5 +1,6 @@
 from chromadb import PersistentClient
-from ..src.core.config import get_settings
+from src.core.config import get_settings
+import json
 
 
 def print_all_entries_with_embeddings():
@@ -27,15 +28,24 @@ def print_all_entries_with_embeddings():
 
         print("\nMETADATA:")
         for k, v in meta.items():
-            print(f"  {k}: {v}")
+            # Pretty-print JSON fields if possible
+            if k in {"http_calls", "routes", "repo_http"}:
+                try:
+                    parsed = json.loads(v)
+                    print(f"  {k}:")
+                    for item in parsed:
+                        print(f"    - {item}")
+                except Exception:
+                    print(f"  {k}: {v}")
+            else:
+                print(f"  {k}: {v}")
 
         print("\nDOCUMENT (detailed description):")
         print(doc)
 
         if emb is not None:
-            print("\nEMBEDDING:")
-            print(emb)
-            print(f"\nEMBEDDING DIMENSION: {len(emb)}")
+            print("\nEMBEDDING DIMENSION:")
+            print(len(emb))
         else:
             print("\nEMBEDDING: None")
 

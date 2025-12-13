@@ -11,7 +11,7 @@ def second_pass():
         name=settings.COLLECTION_NAME
     )
 
-    results = collection.get(include=["ids", "documents", "metadatas"])
+    results = collection.get(include=["documents", "metadatas"])
 
     for doc_id, document, metadata in zip(
         results["ids"],
@@ -20,6 +20,7 @@ def second_pass():
     ):
         http_calls = json.loads(metadata.get("http_calls", "[]"))
         repo_http = json.loads(metadata.get("repo_http", "[]"))
+        print(http_calls, repo_http)
 
         if not http_calls:
             continue
@@ -76,7 +77,7 @@ def find(http_calls):
                 if not path:
                     continue
 
-                if decorator==method and match(url, path):
+                if decorator == method and match(url, path):
                     new_nodes.append({
                         "target_file": route.get("file"),
                         "url": url
@@ -99,3 +100,6 @@ def match(url: str, route_path: str) -> bool:
         return True
 
     return False
+
+if __name__ == '__main__':
+    second_pass()

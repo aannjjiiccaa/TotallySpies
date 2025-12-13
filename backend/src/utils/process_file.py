@@ -120,7 +120,9 @@ def add_to_base(
     if node_type == "file" and connections is not None:
         filename = path.name
         role = "entrypoint" if filename in ENTRYPOINT_FILENAMES else "module"
+        print(1)
         print(connections.get("http_calls", []))
+        print(2)
         print(connections.get("symbols_used", []))
         metadata.update({
             "role": role,
