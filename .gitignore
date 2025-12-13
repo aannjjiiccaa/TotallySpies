@@ -28,3 +28,4 @@ uv.lock
 
 ai_api/app/data/raw
 ai_api/app/data/bars_db
+frontend/node_modules/
