@@ -17,6 +17,12 @@ ENTRYPOINT_FILENAMES = {
 }
 
 
+def relpath(p, root):
+    p = str(Path(p))
+    root = str(Path(root))
+    return p.replace(root.rstrip("/") + "/", "./")
+
+
 def get_connections(file):
     lang = detect_language(file)
 
@@ -106,6 +112,26 @@ def add_to_base(collection, description, embedding, connections, path):
         embeddings=[embedding],
         metadatas=[metadata],
     )
+
+
+def flush_file_buffer(collection, buffer, embedder):
+    texts = [item["description"] for item in buffer]
+
+    # ONE Cohere API call here
+    embeddings = embedder.embed(
+        texts=texts,
+        model="embed-english-v3.0",
+        input_type="search_document",
+    ).embeddings
+
+    for item, embedding in zip(buffer, embeddings):
+        add_to_base(
+            collection=collection,
+            description=item["description"],
+            embedding=embedding,
+            connections=item["connections"],
+            file=item["file"],
+        )
 
 
 def process_directory(collection, dir_path: str):

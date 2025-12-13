@@ -18,6 +18,12 @@ class Settings(BaseSettings):
     GROQ_MODEL: str = "openai/gpt-oss-20b"
     TEMPERATURE: float = 0.5
 
+    # === Cohere ===
+    COHERE_API_KEY: str
+    COHERE_EMBEDDER_MODEL: str = "embed-english-v3.0"
+
+
+
     class Config:
         env_file = ".env"
         case_sensitive = True
