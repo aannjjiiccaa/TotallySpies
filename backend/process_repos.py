@@ -1,5 +1,4 @@
 from chromadb import PersistentClient
-from sentence_transformers import SentenceTransformer
 from src.core.config import get_settings
 from src.rag.embedder import get_embedder
 from src.rag.llm import get_llm
@@ -21,8 +20,6 @@ def main():
         embeddings = get_embedding(file)
         connections = get_connections(file)
 
-    for entry in iter_chroma_entries(collection):
-        print(entry["id"], entry["metadata"]["path"])
 
 
 

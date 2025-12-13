@@ -13,10 +13,6 @@ class Settings(BaseSettings):
     # === Embeddings ===
     EMBEDDER_MODEL_NAME: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 
-    # === RAG ===
-    CHUNK_SIZE: int = 20
-    RETRIEVER_K: int = 5
-
     # === Groq ===
     GROQ_API_KEY: str
     GROQ_MODEL: str = "openai/gpt-oss-20b"

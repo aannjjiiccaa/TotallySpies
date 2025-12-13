@@ -1,4 +1,4 @@
-from backend.src.utils.parsers import *
+from utils.parsers import *
 
 
 def get_connections(file):
