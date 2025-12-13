@@ -1,17 +1,18 @@
-from src.rag.summary_guide import generate_system_summary, build_system_context
+from src.rag.retriever import answer_with_rag
 from chromadb import PersistentClient
 from src.core.config import get_settings
 
 
-def generate_summary():
+def answer(q):
     settings = get_settings()
     client = PersistentClient(path=settings.PERSIST_DIR)
     collection = client.get_or_create_collection(
         name=settings.COLLECTION_NAME
     )
-    context = build_system_context(collection)
-    return generate_system_summary(context)
+    return answer_with_rag(collection, q)
 
 
 if __name__ == '__main__':
-    print(generate_summary())
+    question = "Which file does any kind of calculation?"
+    answer = answer(question)
+    print(answer)

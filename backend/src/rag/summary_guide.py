@@ -2,6 +2,52 @@ from pathlib import Path
 from typing import List
 from chromadb.api.models.Collection import Collection
 from .llm import get_llm
+import json
+
+
+def build_http_interactions(collection, repo_path: str) -> List[str]:
+    """
+    Returns compact descriptions of HTTP interactions originating from this repo.
+    """
+    res = collection.get(
+        where={"type": "file"},
+        include=["metadatas"],
+    )
+
+    interactions = []
+
+    for meta in res.get("metadatas", []):
+        path = meta.get("path", "")
+        if not path.startswith(repo_path + "/"):
+            continue
+
+        repo_http_raw = meta.get("repo_http")
+        if not repo_http_raw:
+            continue
+
+        try:
+            repo_http = json.loads(repo_http_raw)
+        except Exception:
+            continue
+
+        source_file = Path(path).name
+
+        for edge in repo_http:
+            target = edge.get("target_file")
+            url = edge.get("url")
+
+            if not target or not url:
+                continue
+
+            target_repo = Path(target).parents[2].name  # repo folder name
+            target_file = Path(target).name
+
+            interactions.append(
+                f"- {source_file} calls {target_repo}/{target_file} via {url}"
+            )
+
+    return interactions
+
 
 def build_system_context(
     collection: Collection,
@@ -32,17 +78,25 @@ def build_system_context(
                 "$and": [
                     {"type": "file"},
                     {"role": "entrypoint"},
-                    {"path": {"$contains": repo_path}},
                 ]
             },
             include=["metadatas"],
         )
 
-        entrypoints = []
-        for m in ep_res.get("metadatas", [])[:max_entrypoints_per_repo]:
-            entrypoints.append(
-                f"- {Path(m['path']).name}: {m.get('short', '')}"
-            )
+        entrypoints = [
+                          f"- {Path(m['path']).name}: {m.get('short', '')}"
+                          for m in ep_res.get("metadatas", [])
+                          if m.get("path", "").startswith(repo_path + "/")
+                      ][:max_entrypoints_per_repo]
+
+        # ---------- HTTP interactions ----------
+        http_interactions = build_http_interactions(collection, repo_path)
+
+        http_block = (
+            "\n".join(http_interactions[:5])
+            if http_interactions
+            else "- (No detected HTTP interactions)"
+        )
 
         ep_block = (
             "\n".join(entrypoints)
@@ -76,15 +130,18 @@ def build_system_context(
         # ---------- Build repo block ----------
         repo_block = f"""
         REPOSITORY: {repo_name}
-        
+
         Purpose:
         {repo_short}
-        
+
         Entrypoints:
         {ep_block}
-        
+
         Architecture:
         {dir_block}
+
+        HTTP Interactions:
+        {http_block}
         """.strip()
 
         system_blocks.append(repo_block)
@@ -109,7 +166,7 @@ def generate_system_summary(system_context: str) -> str:
         {system_context}
         
         TASK:
-        Write a clear, well-structured system-level summary that includes:
+        Write a clear but very detailed, well-structured system-level summary that includes:
         
         1) Overall system purpose
         2) Role of each repository
