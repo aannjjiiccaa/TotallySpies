@@ -1,4 +1,4 @@
-from parsers import *
+from src.utils.parsers import detect_language, parse_python
 from ..rag.embedder import get_embedder
 from ..rag.llm import get_llm
 from pathlib import Path
@@ -22,12 +22,6 @@ def get_connections(file):
 
     if lang == "python":
         return parse_python(file)
-    if lang == "c":
-        return parse_c(file)
-    if lang == "cpp":
-        return parse_cpp(file)
-    if lang == "java":
-        return parse_java(file)
 
     return {
         "language": "unknown",
