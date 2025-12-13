@@ -42,9 +42,9 @@ const SignUp = () => {
       <div className="w-full max-w-sm animate-fade-in">
         <div className="mb-8 text-center">
           <div className="mb-4 flex items-center justify-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#69FF47] text-white">
               <svg
-                className="h-5 w-5 text-primary-foreground"
+                className="h-5 w-5 text-white"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

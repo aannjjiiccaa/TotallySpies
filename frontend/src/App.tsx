@@ -10,6 +10,7 @@ import CreateProject from "./pages/CreateProject";
 import Project from "./pages/Project";
 import NotFound from "./pages/NotFound";
 import SignUp from "./pages/SignUp";
+import Welcome from "./pages/Welcome";
 
 const queryClient = new QueryClient();
 
@@ -20,7 +21,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<Welcome />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<Dashboard />} />

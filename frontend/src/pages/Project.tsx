@@ -1,13 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { mockProjects } from "@/data/mockData";
 import OverviewTab from "@/components/project/OverviewTab";
 import ArchitectureTab from "@/components/project/ArchitectureTab";
 import RepositoriesTab from "@/components/project/RepositoriesTab";
 import FlowsTab from "@/components/project/FlowsTab";
 import OnboardingTab from "@/components/project/OnboardingTab";
+import TopNav from "@/components/TopNav";
 
 const Project = () => {
   const { id } = useParams();
@@ -34,22 +35,11 @@ const Project = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="mx-auto flex h-14 max-w-5xl items-center px-6">
-          <button
-            onClick={() => navigate("/dashboard")}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Projects
-          </button>
-        </div>
-      </header>
+      <TopNav onBack={() => navigate("/dashboard")} backLabel="Projects" />
 
       {/* Project Header */}
       <div className="border-b border-border">
-        <div className="mx-auto max-w-5xl px-6 py-8">
+        <div className="mx-auto max-w-[1600px] px-6 py-8">
           <div className="flex items-start justify-between gap-4">
             <div>
               <h1 className="text-2xl font-semibold tracking-tight">{project.name}</h1>
@@ -62,7 +52,7 @@ const Project = () => {
                   </svg>
                   {project.repositories.length} repositories
                 </span>
-                <span>•</span>
+                <span>|</span>
                 <span>Updated {project.lastUpdated}</span>
               </div>
 
@@ -87,7 +77,7 @@ const Project = () => {
       </div>
 
       {/* Tabs */}
-      <div className="mx-auto max-w-5xl px-6 py-6">
+      <div className="mx-auto max-w-[1600px] px-6 py-6">
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="h-auto w-full justify-start gap-1 rounded-none border-b border-border bg-transparent p-0">
             {["Overview", "Architecture", "Repositories", "Flows", "Onboarding"].map((tab) => (

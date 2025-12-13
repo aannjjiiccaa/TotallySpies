@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Plus, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
+import TopNav from "@/components/TopNav";
 
 const CreateProject = () => {
   const navigate = useNavigate();
@@ -36,21 +37,10 @@ const CreateProject = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="mx-auto flex h-14 max-w-2xl items-center px-6">
-          <button
-            onClick={() => navigate("/dashboard")}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </button>
-        </div>
-      </header>
+      <TopNav onBack={() => navigate("/dashboard")} backLabel="Projects" />
 
       {/* Main content */}
-      <main className="mx-auto max-w-2xl px-6 py-10">
+      <main className="mx-auto max-w-[1600px] px-6 py-10">
         <div className="mb-8">
           <h1 className="text-2xl font-semibold tracking-tight">Create Project</h1>
           <p className="mt-1 text-sm text-muted-foreground">
