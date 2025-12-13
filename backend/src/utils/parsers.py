@@ -18,6 +18,7 @@ ROUTE_DECORATORS = {
     "head", "options", "trace",
 }
 
+
 def detect_language(file_path):
     file_path = str(file_path)
     if file_path.endswith(".py"):

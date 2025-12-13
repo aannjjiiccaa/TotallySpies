@@ -24,7 +24,7 @@ def second_pass():
 
         if not http_calls:
             continue
-        new_nodes = find(http_calls) 
+        new_nodes = find(http_calls)
 
         if not new_nodes:
             continue
@@ -38,9 +38,8 @@ def second_pass():
         repo_http = [json.loads(x) for x in repo_http]
 
         metadata["repo_http"] = json.dumps(repo_http)
-        collection.upsert(
+        collection.update(
             ids=[doc_id],
-            documents=[document],
             metadatas=[metadata]
         )
 

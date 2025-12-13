@@ -7,7 +7,6 @@ from src.utils.process_file import get_description, get_embedding, get_connectio
 import os
 
 
-
 def main():
     settings = get_settings()
     llm = get_llm()
