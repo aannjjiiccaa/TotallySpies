@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from typing import Any, Optional, Dict, List
 
-from src.utils.url_extractor import URLExtractor
+from .url_extractor import URLExtractor
 
 HTTP_LIBS = {
     "requests",
@@ -51,7 +51,7 @@ def parse_python(file_path):
                 module_name = n.name
                 abs_path = resolve_import_from_file(file_path, module_name)
                 if abs_path:
-                    imports.add(normalize_path(abs_path))
+                    imports.add(str(abs_path))
                 else:
                     packages.add(module_name)
 
@@ -60,7 +60,7 @@ def parse_python(file_path):
                 module_name = node.module
                 abs_path = resolve_import_from_file(file_path, node.module)
                 if abs_path:
-                    imports.add(normalize_path(abs_path))
+                    imports.add(str(abs_path))
                 else:
                     packages.add(module_name)
 
@@ -89,7 +89,7 @@ def parse_python(file_path):
                         "library": base.id,
                         "method": func_name,
                         "url": url,
-                        "file": normalize_path(abs_path),
+                        "file": str(file_path),
                         "lineno": node.lineno
                     })
 
@@ -102,11 +102,6 @@ def parse_python(file_path):
         "http_calls": http_calls,
         "routes": routes
     }
-
-def normalize_path(path: Path, repo_root: Path = None) -> str:
-    if repo_root:
-        path = path.relative_to(repo_root)
-    return str(path).replace("\\", "/")
 
 def resolve_import_from_file(current_file_path, module_name):
     base_dir = os.path.dirname(os.path.abspath(current_file_path))
@@ -192,7 +187,7 @@ def extract_routes_from_function(func_node: ast.FunctionDef, file_path: str, cla
                 route_info.update({
                     "function_name": func_node.name,
                     "class_name": class_name,
-                    "file": normalize_path(file_path),
+                    "file": str(file_path),
                     "lineno": func_node.lineno,
                     "full_path": f"{class_name}.{func_node.name}" if class_name else func_node.name
                 })
