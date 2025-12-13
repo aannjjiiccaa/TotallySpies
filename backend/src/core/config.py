@@ -4,8 +4,8 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     # === Paths ===
-    PERSIST_DIR: str = "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/data"
-    CLONING_DIR: str = "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir"
+    PERSIST_DIR: str = r"C:\Users\mestr\OneDrive\Desktop\TotallySpies\TotallySpies\backend\src\data"
+    CLONING_DIR: str = r"C:\Users\mestr\OneDrive\Desktop\TotallySpies\TotallySpies\backend\src\cloning_dir"
 
     # === Chroma ===
     COLLECTION_NAME: str = "files_vdb"
