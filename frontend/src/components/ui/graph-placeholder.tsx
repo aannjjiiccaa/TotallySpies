@@ -3,7 +3,7 @@ import cytoscape, { type Core, type ElementDefinition } from "cytoscape";
 
 /** input */
 type RawGraph = {
-  nodes?: Array<{ id: string; name: string; repo: string }>;
+  nodes?: Array<{ id: string; name: string; repo: string; description?: string }>;
   edges?: Array<{ from: string; to: string; type: string }>;
 };
 
@@ -39,7 +39,7 @@ const BASE_X = 140;
 
 /** horizontal swimlanes */
 const LANE_Y_START = 140;
-const LANE_Y_GAP = 260;
+const LANE_Y_GAP = 500;
 
 /** spacing inside lanes */
 const LEVEL_H = 110;         // ✅ visina nivoa unutar repo-a (manje -> zbijenije)
@@ -142,6 +142,7 @@ export default function ProjectGraphPlaceholder({ graphData }: { graphData?: any
     kind: NodeKind;
     repo?: { id: string; label: string; colorBg: string; colorBorder: string };
     meta?: Record<string, any>;
+    description?: string;
     neighbors: string[];
     edges: string[];
   } | null>(null);
@@ -163,8 +164,8 @@ export default function ProjectGraphPlaceholder({ graphData }: { graphData?: any
       kind: "file",
       label: n.name, // ✅ label = name
       repo: n.repo ?? "unknown",
-      description: "",
-      meta: { path: n.id, repo: n.repo, name: n.name },
+      description: n.description ?? "",
+      meta: { path: n.id, repo: n.repo, name: n.name, description: n.description ?? "" },
     }));
 
     const edges: GraphEdge[] = (raw?.edges ?? []).map((e, idx) => ({
@@ -286,7 +287,9 @@ export default function ProjectGraphPlaceholder({ graphData }: { graphData?: any
       repo: repoId
         ? { id: repoId, label: repoLookup[repoId] ?? repoId, colorBg: t?.bg ?? "#E2E8F0", colorBorder: t?.border ?? "#334155" }
         : undefined,
-      meta: node.data("meta") ?? {},
+      // ensure description from the original graph node is available separately
+      meta: { ...(node.data("meta") ?? {}), description: node.data("description") ?? (node.data("meta")?.description ?? "") },
+      description: node.data("description") ?? (node.data("meta")?.description ?? ""),
       neighbors: node.neighborhood("node").map((n: any) => n.data("label")),
       edges: node.connectedEdges().map((e: any) => {
         const s = e.source().data("label");
@@ -590,12 +593,10 @@ export default function ProjectGraphPlaceholder({ graphData }: { graphData?: any
                 )}
               </div>
 
-              {selected.meta && Object.keys(selected.meta).length > 0 && (
+              {selected.description && selected.description.trim() !== "" && (
                 <div>
-                  <div className="text-xs font-medium mb-1">Meta</div>
-                  <pre className="text-xs bg-muted p-3 rounded font-mono whitespace-pre-wrap overflow-x-auto">
-                    {JSON.stringify(selected.meta, null, 2)}
-                  </pre>
+                  <div className="text-xs font-medium mb-1">Description</div>
+                  <div className="text-sm text-muted-foreground whitespace-pre-wrap">{selected.description}</div>
                 </div>
               )}
 

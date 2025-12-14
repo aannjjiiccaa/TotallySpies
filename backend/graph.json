@@ -1,230 +1,515 @@
 {
   "nodes": [
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/main.py",
       "name": "main.py",
-      "repo": "test1"
+      "repo": "test1",
+      "description": "The file imports utility functions and classes for API calls, arithmetic operations, a CIFAR-10 neural network model, and maximum likelihood estimators. In the main function, it prints a status message, retrieves data via fetch_data(), displays the received data, creates an Adder instance with values 5 and 1, a Multiplier instance with values 5 and 6, and initializes the neural network model. It then prints the result of the prvi_izvod estimator applied to the Adder instance. The script runs this workflow when executed as the main module."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/neutal_network/cifar_10_nn.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/neutal_network/cifar_10_nn.py",
       "name": "cifar_10_nn.py",
-      "repo": "test1"
+      "repo": "test1",
+      "description": "The script builds a Keras Model consisting of three Conv2D layers (32, 64, 128 filters) each followed by batch normalization, ReLU activation, and pooling where applicable, then flattens the feature maps. A dense layer with 64 units and dropout (0.5) precedes a final 10\u2011unit output layer for classification. L2 regularization (0.01) is applied to all convolutional and dense layers. CIFAR-10 data is loaded, normalized to [0,1], and split into training and test sets. The model is compiled with sparse categorical cross\u2011entropy (logits), Adam optimizer (learning rate 3e-4), and accuracy metric. It is trained for 10 epochs with a batch size of 64, then evaluated on the test set, printing loss and accuracy."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/estimators/maximum_likelihood_estimator.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/estimators/maximum_likelihood_estimator.py",
       "name": "maximum_likelihood_estimator.py",
-      "repo": "test1"
+      "repo": "test1",
+      "description": "Three helper functions implement the first derivative, second derivative, and log\u2011likelihood of a Cauchy model for a vector of observations and a parameter theta. The emv function applies Newton\u2011Raphson using these derivatives to find the maximum\u2011likelihood estimate. In main(), a CSV file is read; for three selected rows, the script evaluates the log\u2011likelihood and its derivatives over a theta grid and plots them in a 3x3 figure. It then runs iterative Newton updates for three other rows, storing intermediate theta values and plotting their convergence. Finally, it estimates theta for 99 experiments using emv with adaptive starting points, replaces extreme estimates with random normals, and displays a histogram of all estimates."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/estimators/kalman_filtar.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/estimators/kalman_filtar.py",
       "name": "kalman_filtar.py",
-      "repo": "test1"
+      "repo": "test1",
+      "description": "The script loads a CSV of measurements, defines a linear state\u2011space model (position, velocity, acceleration) with matrices A, B, H, and sets two process\u2011noise levels (Q1, Q2). It iterates over 100 time steps, applying a standard Kalman predict\u2011update cycle for most steps, but disables measurement updates (K=0) during indices 40\u201149 and uses the higher\u2011noise covariance Q1 for early and late intervals. At each step it stores the estimated state, Kalman gain, diagonal covariance, and 2\u03c3 confidence bounds for each state component, as well as the innovation covariance. After the loop, it generates five Matplotlib figures: measured vs. estimated position with confidence band, velocity estimate with band, acceleration estimate with band, time series of Kalman gains for each state, and innovation covariance traces. The main function runs when the script is executed directly."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/funcs/add.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/funcs/add.py",
       "name": "add.py",
-      "repo": "test1"
+      "repo": "test1",
+      "description": "The file declares an `Adder` class with an initializer that accepts two integer arguments, `a` and `b`, and assigns them to instance attributes. It includes an `add` method that computes and returns the arithmetic sum of these stored integers. This encapsulates basic addition functionality within an object-oriented interface."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/funcs/div.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/funcs/div.py",
       "name": "div.py",
-      "repo": "test1"
+      "repo": "test1",
+      "description": "The file implements a single function named divide that takes two arguments, a and b. It checks if b is non\u2011zero; if so, it returns the result of a divided by b. If b equals zero, the function avoids a ZeroDivisionError by returning 0 instead. This provides a simple safeguard against division\u2011by\u2011zero errors."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/funcs/mul.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/funcs/mul.py",
       "name": "mul.py",
-      "repo": "test1"
+      "repo": "test1",
+      "description": "The file defines a `Multiplier` class. Its constructor (`__init__`) accepts two integer arguments, `a` and `b`, and stores them as instance attributes. The class provides an `add` method, which despite its name, computes and returns the product of the stored integers (`self.a * self.b`). This encapsulates basic integer multiplication within an object-oriented interface."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/services/__init__.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/services/__init__.py",
       "name": "__init__.py",
-      "repo": "test1"
+      "repo": "test1",
+      "description": "The file is empty, lacking any statements, definitions, imports, or comments, and therefore does not perform any operations or define any functionality."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/services/call_api.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/services/call_api.py",
       "name": "call_api.py",
-      "repo": "test1"
+      "repo": "test1",
+      "description": "The script defines `fetch_data`, which performs an HTTP GET request to http://127.0.0.1:8000/data using the requests library, raises for HTTP errors, and returns the parsed JSON or an error dictionary. `process_data` receives the fetched result, propagates any error unchanged, and otherwise checks the data type: if it is a list, it returns a dictionary with the item count; for other types it returns the data wrapped in a `received` field. When executed as the main module, the script fetches the data, processes it with these rules, and prints the resulting dictionary."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/chatbot.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/chatbot.py",
       "name": "chatbot.py",
-      "repo": "test3"
+      "repo": "test3",
+      "description": "The module defines an `answer` function that first loads configuration via `get_settings()`. It creates a `PersistentClient` pointing to the directory specified by `settings.PERSIST_DIR` and retrieves or creates a collection named `settings.COLLECTION_NAME`. The function then delegates the query `q` to `answer_with_rag`, passing the collection, and returns the generated answer. When run as a script, it demonstrates this flow with a sample question and prints the result."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/main.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/main.py",
       "name": "main.py",
-      "repo": "test3"
+      "repo": "test3",
+      "description": "The file imports the `answer` function from the `chatbot` module. In the `__main__` block it defines a sample question string, calls `answer(question)`, stores the result in `ans`, and then prints the `answer` identifier itself (the function object) instead of the result. This serves as a minimal example of how to use the `answer` function, though the final print statement likely reflects a coding oversight."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/core/config.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/core/config.py",
       "name": "config.py",
-      "repo": "test3"
+      "repo": "test3",
+      "description": "The file declares a Settings class inheriting from BaseSettings, exposing configuration parameters such as file system paths, Chroma collection name, embedding model identifiers, Groq and Cohere API credentials, model selections, temperature, and batch size. Default values are supplied for most fields, while API keys are required at runtime. The inner Config class points to a '.env' file for environment variable loading and enforces case sensitivity. A get_settings function, decorated with @lru_cache, returns a singleton instance of Settings, ensuring the configuration is parsed only once and reused throughout the application."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/core/__init__.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/core/__init__.py",
       "name": "__init__.py",
-      "repo": "test3"
+      "repo": "test3",
+      "description": ""
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/retriever.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/retriever.py",
       "name": "retriever.py",
-      "repo": "test3"
+      "repo": "test3",
+      "description": "The module defines a keyword set and a helper to detect entrypoint\u2011related queries. It includes a function that formats retrieved repository nodes (files, directories, repos, entrypoints) into a concise textual context, extracting purposes, snippets, and HTTP call metadata. A ChromaRetriever class wraps a Chroma collection, embedding the query with a search\u2011specific embedder and returning structured results with type, path, document, metadata, and similarity score. The answer_with_rag function orchestrates retrieval, determines if entrypoints should be emphasized, builds the context, constructs a prompt for a language model, and returns the model's generated answer. Supporting imports provide the embedder and LLM factories."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/__init__.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/__init__.py",
       "name": "__init__.py",
-      "repo": "test3"
+      "repo": "test3",
+      "description": ""
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/llm.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/llm.py",
       "name": "llm.py",
-      "repo": "test3"
+      "repo": "test3",
+      "description": "The module declares an abstract base class LLM with generate and chat methods. GroqLLM implements this interface by wrapping a ChatGroq client, forwarding generate calls with a single prompt and chat calls with a list of message dictionaries, returning the response content. The get_llm function retrieves application settings, constructs a GroqLLM using the configured model, temperature, and API key, and caches the instance with lru_cache to ensure a single shared LLM object throughout the application."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/prompts.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/prompts.py",
       "name": "prompts.py",
-      "repo": "test3"
+      "repo": "test3",
+      "description": "The input does not contain any code, so no functional description can be derived."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/embedder.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/embedder.py",
       "name": "embedder.py",
-      "repo": "test3"
+      "repo": "test3",
+      "description": "The module defines an abstract base class Embedder with an embed method contract. LocalEmbedder implements this contract using a SentenceTransformer model to generate normalized embeddings for a list of texts. APIEmbedder implements the contract by calling Cohere's embed endpoint, handling both single string and list inputs, and returning the resulting embedding vectors. A cached factory function get_embedder reads configuration via get_settings, constructs an APIEmbedder with the configured API key, model name, and optional input_type, and caches the instance for reuse."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/summary_guide.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/summary_guide.py",
       "name": "summary_guide.py",
-      "repo": "test3"
+      "repo": "test3",
+      "description": "The module defines three main functions. `build_http_interactions` queries the collection for file records, filters those belonging to a given repository path, parses a JSON field containing HTTP call edges, and returns concise strings describing each source file calling a target repository/file via a URL. `build_system_context` gathers all repositories, then for each repository extracts its short description, up to a limited number of entrypoint files, top\u2011level directories, and HTTP interactions (via the previous helper). It formats these pieces into a structured text block per repository and concatenates them. `generate_system_summary` obtains an LLM instance via `get_llm`, crafts a prompt that includes the assembled system context, and asks the model to produce a detailed, well\u2011structured documentation summary. The functions rely on ChromaDB metadata queries and standard pathlib operations."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/main.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/main.py",
       "name": "main.py",
-      "repo": "test2"
+      "repo": "test2",
+      "description": "The script creates a FastAPI instance and registers two GET routes: '/' returns a JSON message confirming the API is operational, and '/data' invokes get_data() from the api.data_service module and returns its result. While several machine learning modules are imported, they are not utilized within this file."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/machine_learning/random_forrest_practice_iris_flower.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/machine_learning/random_forrest_practice_iris_flower.py",
       "name": "random_forrest_practice_iris_flower.py",
-      "repo": "test2"
+      "repo": "test2",
+      "description": "The script loads the Iris dataset, converts it to a pandas DataFrame, and adds a categorical species column. It randomly assigns 75% of rows to a training set and the remainder to a test set. Features are the four numeric measurements; the target labels are factorized from the species column. A RandomForestClassifier (2 jobs, fixed seed) is fitted on the training data. The model then predicts species for the test set, outputs the raw class indices, the first ten class probability vectors, and the corresponding species names. Finally, a confusion matrix is generated using pandas crosstab to compare actual versus predicted species, and all intermediate results are printed to the console."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/machine_learning/lasso.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/machine_learning/lasso.py",
       "name": "lasso.py",
-      "repo": "test2"
+      "repo": "test2",
+      "description": "The script generates all monomial exponent tuples up to a given degree and builds a design matrix of polynomial features (including a bias column). Helper utilities convert exponent tuples to readable strings, standardize training and validation data, and apply a soft\u2011threshold operator. LASSO is solved by an iterative coordinate\u2011descent algorithm that updates the intercept and each weight using soft\u2011thresholding on the partial residuals. RMSE and a routine for creating shuffled k\u2011fold indices support model evaluation. A cross\u2011validation function evaluates a grid of \u03bb values, returning mean and std RMSE per \u03bb and the best \u03bb. The main routine loads a CSV, runs CV, plots the CV curve, retrains on the full dataset with the optimal \u03bb, and prints the intercept, non\u2011zero coefficients, and their corresponding polynomial terms."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/machine_learning/nm_vezba5.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/machine_learning/nm_vezba5.py",
       "name": "nm_vezba5.py",
-      "repo": "test2"
+      "repo": "test2",
+      "description": "The script loads the scikit\u2011learn breast cancer dataset, separates features and binary labels, and splits them into training (80%) and test sets. Features are standardized with StandardScaler. A Keras Sequential model with two hidden ReLU layers (10 and 5 units) and a sigmoid output is defined and compiled with Adam optimizer and binary cross\u2011entropy loss. The model is first trained on the training set with early stopping based on validation accuracy, then its test accuracy is printed. Afterwards, a 5\u2011fold KFold cross\u2011validation is performed on the normalized training data: for each fold the same model (re\u2011using the previously built instance) is fine\u2011tuned with early stopping, fold accuracy is recorded, and the best\u2011performing model is retained. Finally, the best model predicts on the held\u2011out test set, rounding probabilities to class labels, and the overall test accuracy is reported."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/api/data_service.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/api/data_service.py",
       "name": "data_service.py",
-      "repo": "test2"
+      "repo": "test2",
+      "description": "The file declares a single function, get_data, which when called returns a Python dictionary containing a single key-value pair: the key 'data' mapped to the string 'Hello from Project B!'. This provides a simple, hard\u2011coded data source that can be imported and used by other modules."
     },
     {
-      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/api/__init__.py",
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/api/__init__.py",
       "name": "__init__.py",
-      "repo": "test2"
+      "repo": "test2",
+      "description": "The file does not define any classes, functions, imports, or executable statements, resulting in no behavior or functionality being implemented."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/main.py",
+      "name": "main.py",
+      "repo": "Estimation_Functions",
+      "description": "The file imports a data\u2011retrieval function, three arithmetic classes/functions (Adder, Multiplier, divide), a neural\u2011network model constructor, and two estimator functions (prvi_izvod, drugi_izvod). In the main routine it prints a status message, calls fetch_data() and displays the result, creates an Adder instance with values 5 and 1, a Multiplier instance with values 5 and 6, and initializes the CIFAR\u201110 neural network model. It then invokes the first estimator (prvi_izvod) on the Adder object and prints the returned value. The script runs this workflow when executed as the main module."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/neutal_network/cifar_10_nn.py",
+      "name": "cifar_10_nn.py",
+      "repo": "Estimation_Functions",
+      "description": "The script builds a Keras Model for 32x32 RGB images: three Conv2D layers (32, 64, 128 filters) each followed by batch normalization, ReLU activation, and pooling after the first conv. The feature map is flattened, passed through a 64\u2011unit dense layer with ReLU and dropout, and finally a 10\u2011unit output layer (logits). L2 regularization (0.01) is applied to all convolutional and dense layers. CIFAR-10 data is loaded, normalized to [0,1], and the model is compiled with Sparse Categorical Crossentropy (from logits), Adam optimizer (lr=3e-4), and accuracy metric. It is trained for 10 epochs with batch size 64, then evaluated on the test set."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/estimators/maximum_likelihood_estimator.py",
+      "name": "maximum_likelihood_estimator.py",
+      "repo": "Estimation_Functions",
+      "description": "The module defines functions for the first and second derivatives of the Cauchy log\u2011likelihood (prvi_izvod, drugi_izvod) and for the log\u2011likelihood itself (log_ver). An EM\u2011style estimator (emv) uses Newton\u2011Raphson updates until convergence or a maximum iteration count. In main(), a CSV file with three observation sets is loaded; for a grid of theta values the script evaluates and plots the log\u2011likelihood, its first and second derivatives for each set. It then demonstrates Newton\u2011Raphson convergence on three selected observation rows, plotting the parameter estimates over iterations. Finally, it runs the EM estimator on the first 99 rows, adjusts out\u2011of\u2011range estimates with random draws, and displays a histogram of the 100 estimated location parameters. Matplotlib is used for all visualizations."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/estimators/kalman_filtar.py",
+      "name": "kalman_filtar.py",
+      "repo": "Estimation_Functions",
+      "description": "The script loads a CSV of measurements, defines a linear state\u2011space model (position, velocity, acceleration) with matrices A, B, H, and sets two process\u2011noise covariance levels (Q1, Q2). It iterates over 100 time steps, applying a standard Kalman predict\u2011update cycle for most steps, but disables measurement updates (K=0) during indices 40\u201149 and uses the higher\u2011noise covariance Q1 for early and late intervals. At each step it stores state estimates, diagonal covariance entries, 2\u03c3 confidence bounds, Kalman gains, and innovation covariance values. After processing, it generates five Matplotlib figures: measured vs. estimated position with confidence band, velocity estimate with band, acceleration estimate with band, time series of Kalman gains for each state, and innovation covariance for each state."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/funcs/add.py",
+      "name": "add.py",
+      "repo": "Estimation_Functions",
+      "description": "The file declares an Adder class with an initializer that accepts two integer parameters, a and b, and assigns them to instance attributes. It includes an add method that computes and returns the arithmetic sum of these stored integers. The class encapsulates basic addition functionality without any external dependencies or side effects."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/funcs/div.py",
+      "name": "div.py",
+      "repo": "Estimation_Functions",
+      "description": "The file defines a function named `divide` that takes two parameters, `a` and `b`. It checks whether `b` is non-zero; if true, it returns the result of `a / b`. If `b` equals zero, the function returns 0 instead of raising a division-by-zero exception. No type checking or additional error handling is performed."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/funcs/mul.py",
+      "name": "mul.py",
+      "repo": "Estimation_Functions",
+      "description": "The file declares a class named Multiplier with an initializer that accepts two integer arguments, a and b, and assigns them to instance attributes. It includes a method called add, which despite its name, returns the multiplication of the stored integers (self.a * self.b). This class encapsulates basic arithmetic functionality for multiplying two numbers."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/services/__init__.py",
+      "name": "__init__.py",
+      "repo": "Estimation_Functions",
+      "description": ""
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/services/call_api.py",
+      "name": "call_api.py",
+      "repo": "Estimation_Functions",
+      "description": "The module defines three main parts: (1) fetch_data() builds a fixed URL (http://127.0.0.1:8000/data), performs an HTTP GET via the requests library, raises for HTTP errors, and returns the parsed JSON; any exception is caught and returned as an error dictionary. (2) process_data(data) acts as a placeholder processing step: it first propagates error dictionaries unchanged, then if the input is a list it returns a dictionary with the item count, otherwise it returns the raw data wrapped in a 'received' key. (3) When executed as a script, it calls fetch_data(), passes the result to process_data(), and prints the final dictionary. This provides a simple end\u2011to\u2011end flow for retrieving and summarizing remote data."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/main.py",
+      "name": "main.py",
+      "repo": "ML_endpoint",
+      "description": "The file creates a FastAPI application instance and registers two GET routes. The root path (\"/\") returns a simple JSON message confirming the API is running. The \"/data\" endpoint calls the imported get_data() function from api.data_service and returns its result as JSON. Additional imports from machine_learning modules are present but not directly used in the request handlers, possibly for side\u2011effects or future expansion."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/machine_learning/random_forrest_practice_iris_flower.py",
+      "name": "random_forrest_practice_iris_flower.py",
+      "repo": "ML_endpoint",
+      "description": "The code imports the Iris dataset and required libraries, sets a NumPy random seed, and creates a pandas DataFrame with feature columns and a categorical species label. It randomly assigns 75% of rows to a training set. Features are the first four columns; the target labels are factorized numeric codes from the species column. A RandomForestClassifier (2 jobs, fixed seed) is fitted on the training data. The model predicts species for the test set, prints the raw predictions, the probability distribution for the first ten test samples, and maps numeric predictions back to species names. Finally, it builds and prints a confusion matrix comparing actual species to predicted species using pandas crosstab."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/machine_learning/lasso.py",
+      "name": "lasso.py",
+      "repo": "ML_endpoint",
+      "description": "The script generates all monomial exponent tuples up to a given degree (generate_exponent_tuples) and builds a design matrix with those polynomial features (poly_design_matrix). Helper utilities convert exponent tuples to readable strings, standardize training and validation data, and apply a soft\u2011threshold operator. The core optimizer (lasso_coordinate_descent) solves the LASSO objective using coordinate descent with an intercept update. RMSE and k\u2011fold index utilities support evaluation. cross_validate_lasso runs k\u2011fold CV over a grid of lambda values, standardizing each fold, fitting LASSO, and collecting mean and std RMSEs to pick the best lambda. The main function loads a CSV, performs CV, plots the CV curve, retrains on the full data with the optimal lambda, and prints the intercept, non\u2011zero coefficients with their polynomial terms, and the estimated RMSE."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/machine_learning/nm_vezba5.py",
+      "name": "nm_vezba5.py",
+      "repo": "ML_endpoint",
+      "description": "The script loads the scikit\u2011learn breast cancer dataset, separates features and binary labels, and prints their shapes. It splits the data (80% train, 20% test) and standardizes features with StandardScaler. A Keras Sequential model with two hidden ReLU layers (10 and 5 units) and a sigmoid output is defined and compiled for binary cross\u2011entropy with Adam optimizer. The model is first trained on the training set with early stopping based on validation accuracy. After initial evaluation, a 5\u2011fold KFold cross\u2011validation is performed on the training data: each fold retrains the same model (with early stopping), records validation accuracy, and tracks the best\u2011performing model. Finally, the best model predicts on the held\u2011out test set, rounds predictions, and reports test accuracy using sklearn's accuracy_score."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/api/data_service.py",
+      "name": "data_service.py",
+      "repo": "ML_endpoint",
+      "description": "The file declares a single function, get_data, which when called returns a Python dictionary with one key, \"data\", mapped to the string \"Hello from Project B!\". This provides a simple, hard\u2011coded data payload that can be imported and used by other modules."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/api/__init__.py",
+      "name": "__init__.py",
+      "repo": "ML_endpoint",
+      "description": "The input lacks any code content, so there is nothing to evaluate or describe. Without code, the file's purpose, behavior, and structure cannot be inferred."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/chatbot.py",
+      "name": "chatbot.py",
+      "repo": "RAG_chatbot",
+      "description": "The module imports a RAG answer function, a persistent ChromaDB client, and a settings loader. The `answer` function obtains configuration via `get_settings()`, creates or opens a ChromaDB client at the directory specified by `settings.PERSIST_DIR`, and retrieves (or creates) a collection named `settings.COLLECTION_NAME`. It then forwards the collection and the user query to `answer_with_rag`, returning the generated response. When run as a script, it demonstrates usage by querying a sample question and printing the result."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/main.py",
+      "name": "main.py",
+      "repo": "RAG_chatbot",
+      "description": "The file imports the `answer` function from the `chatbot` module. In the `__main__` block it defines a static question string (\"What is AI?\"), calls `answer(question)` and stores the result in `ans`. It then prints the name `answer` itself rather than the returned answer, which likely reflects a coding oversight. The script serves as a basic example of how to call the chatbot's answer function from a standalone Python program."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/core/config.py",
+      "name": "config.py",
+      "repo": "RAG_chatbot",
+      "description": "The file declares a Settings class inheriting from pydantic's BaseSettings, enumerating default paths, Chroma collection name, embedding model identifiers, Groq and Cohere API credentials, and related parameters. It specifies that values can be overridden via a .env file and enforces case sensitivity. A Config inner class configures the environment file handling. The get_settings function, decorated with @lru_cache, returns a singleton Settings instance, ensuring settings are loaded once and reused throughout the application."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/core/__init__.py",
+      "name": "__init__.py",
+      "repo": "RAG_chatbot",
+      "description": "The input does not contain any code to examine, so a description cannot be generated."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/retriever.py",
+      "name": "retriever.py",
+      "repo": "RAG_chatbot",
+      "description": "The module defines entrypoint keywords and a helper to detect entrypoint\u2011related queries. It provides build_rag_context, which formats retrieved repository, entrypoint, file, and directory metadata into readable blocks, optionally highlighting HTTP calls. The ChromaRetriever class wraps a Chroma collection, uses a search\u2011query embedder to embed the user query, and returns a list of nodes with type, path, document, metadata, and similarity score. answer_with_rag orchestrates the workflow: it creates a retriever, fetches top\u2011k nodes, decides whether to prioritize entrypoints, builds the RAG context, crafts a detailed prompt for the LLM, and returns the generated answer. All I/O is limited to printing debug information."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/__init__.py",
+      "name": "__init__.py",
+      "repo": "RAG_chatbot",
+      "description": "The input does not contain any code after the 'CODE:' marker, therefore a description of the file's purpose and behavior cannot be generated."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/llm.py",
+      "name": "llm.py",
+      "repo": "RAG_chatbot",
+      "description": "The module declares an abstract base class LLM with generate and chat methods. GroqLLM implements this interface, wrapping a ChatGroq client configured with model, temperature, and API key, and forwards generate and chat calls to the client, returning the response content. A get_llm function retrieves application settings, constructs a GroqLLM with those parameters, and caches the instance using lru_cache to ensure a single shared LLM object throughout the application."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/prompts.py",
+      "name": "prompts.py",
+      "repo": "RAG_chatbot",
+      "description": "No source code was provided, so the functionality cannot be described."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/embedder.py",
+      "name": "embedder.py",
+      "repo": "RAG_chatbot",
+      "description": "The module defines an abstract base class Embedder with an embed method contract. LocalEmbedder implements this using SentenceTransformer to generate normalized embeddings for a list of texts. APIEmbedder wraps the Cohere API client, allowing embedding of single or multiple strings and returning the embeddings list; it accepts configurable model and input_type parameters. A cached factory function get_embedder retrieves application settings, constructs an APIEmbedder with the configured API key and model, and caches the instance for reuse. The design enables interchangeable embedding backends and centralized configuration."
+    },
+    {
+      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/summary_guide.py",
+      "name": "summary_guide.py",
+      "repo": "RAG_chatbot",
+      "description": "The module defines three main functions. `build_http_interactions` queries the collection for file records, filters those belonging to a given repository path, parses stored HTTP interaction data, and returns concise descriptions of calls between source and target files. `build_system_context` gathers all repositories, then for each repository collects its short description, top entrypoint files, top-level directories, and up to five HTTP interactions using the previous helper; it formats this information into a structured text block. `generate_system_summary` obtains an LLM instance via `get_llm`, constructs a prompt that includes the structured system context, and asks the model to produce a detailed, professional system-level summary. The functions rely on ChromaDB metadata fields such as `type`, `role`, `short`, and custom `repo_http` JSON strings."
     }
   ],
   "edges": [
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/funcs/add.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/funcs/add.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/services/call_api.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/funcs/div.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/estimators/maximum_likelihood_estimator.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/funcs/mul.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/funcs/mul.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/neutal_network/cifar_10_nn.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/funcs/div.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/estimators/maximum_likelihood_estimator.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/neutal_network/cifar_10_nn.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/services/call_api.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/estimators/maximum_likelihood_estimator.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/estimators/kalman_filtar.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/estimators/maximum_likelihood_estimator.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/estimators/kalman_filtar.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/services/call_api.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/main.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/services/call_api.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/main.py",
       "type": "http"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/chatbot.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/core/config.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/services/call_api.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/main.py",
+      "type": "http"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/chatbot.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/retriever.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/chatbot.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/retriever.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/chatbot.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/core/config.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/main.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/chatbot.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/chatbot.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/retriever.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/embedder.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/retriever.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/llm.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/retriever.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/llm.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/retriever.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/embedder.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/llm.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/core/config.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/llm.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/core/config.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/embedder.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/core/config.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/embedder.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/core/config.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/summary_guide.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/llm.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/summary_guide.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test3/rag/llm.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/main.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/machine_learning/lasso.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/api/data_service.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/main.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/machine_learning/random_forrest_practice_iris_flower.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/machine_learning/nm_vezba5.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/main.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/machine_learning/nm_vezba5.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/machine_learning/random_forrest_practice_iris_flower.py",
       "type": "import"
     },
     {
-      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/main.py",
-      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/api/data_service.py",
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/machine_learning/lasso.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/funcs/add.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/services/call_api.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/funcs/div.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/neutal_network/cifar_10_nn.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/estimators/maximum_likelihood_estimator.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/funcs/mul.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/estimators/maximum_likelihood_estimator.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/estimators/kalman_filtar.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/services/call_api.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/main.py",
+      "type": "http"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/Estimation_Functions/services/call_api.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/main.py",
+      "type": "http"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/machine_learning/lasso.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/machine_learning/random_forrest_practice_iris_flower.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/api/data_service.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/ML_endpoint/machine_learning/nm_vezba5.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/chatbot.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/retriever.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/chatbot.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/core/config.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/main.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/chatbot.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/retriever.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/llm.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/retriever.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/embedder.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/llm.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/core/config.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/embedder.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/core/config.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/summary_guide.py",
+      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/RAG_chatbot/rag/llm.py",
       "type": "import"
     }
   ]

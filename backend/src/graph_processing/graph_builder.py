@@ -43,12 +43,14 @@ def build_graph():
         file_path = metadata.get("path", doc_id)
         norm_path = normalize_path(file_path, str(cloning_dir))
         repo = extract_repo(file_path, str(cloning_dir))
+        description = document
         name = extract_name(doc_id)
 
         node = {
             "id": doc_id,
             "name": name,
-            "repo": repo
+            "repo": repo,
+            "description": description,
         }
 
         nodes.append(node)

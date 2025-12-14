@@ -18,7 +18,7 @@ router = APIRouter()
 
 
 
-@router.post("/graph")
+@router.get("/graph")
 async def generate_graph():
     try:
         build_graph()  
