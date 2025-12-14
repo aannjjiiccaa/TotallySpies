@@ -6,8 +6,25 @@ interface ArchitectureTabProps {
 }
 
 const ArchitectureTab = ({ project }: ArchitectureTabProps) => {
+  // derive unique repo names from graph nodes (fallback empty array)
+  const graphNodes: any[] = (project as any).graph?.nodes || [];
+  const repoNames = Array.from(new Set(graphNodes.map((n) => n.repo).filter(Boolean)));
+
   return (
     <div className="animate-fade-in space-y-8">
+      {/* Repositories found in the graph */}
+      {repoNames.length > 0 && (
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-medium">Repositories:</h3>
+          <div className="flex flex-wrap gap-2">
+            {repoNames.map((r) => (
+              <span key={r} className="inline-flex items-center rounded bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground">
+                {r}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
       {/* System graph */}
       <section>
         <h2 className="text-lg font-medium mb-4">System Graph</h2>
