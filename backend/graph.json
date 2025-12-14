@@ -1,80 +1,230 @@
 {
   "nodes": [
     {
-      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
       "name": "main.py",
       "repo": "test1"
     },
     {
-      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/funcs/add.py",
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/neutal_network/cifar_10_nn.py",
+      "name": "cifar_10_nn.py",
+      "repo": "test1"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/estimators/maximum_likelihood_estimator.py",
+      "name": "maximum_likelihood_estimator.py",
+      "repo": "test1"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/estimators/kalman_filtar.py",
+      "name": "kalman_filtar.py",
+      "repo": "test1"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/funcs/add.py",
       "name": "add.py",
       "repo": "test1"
     },
     {
-      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/funcs/div.py",
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/funcs/div.py",
       "name": "div.py",
       "repo": "test1"
     },
     {
-      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/funcs/mul.py",
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/funcs/mul.py",
       "name": "mul.py",
       "repo": "test1"
     },
     {
-      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/services/__init__.py",
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/services/__init__.py",
       "name": "__init__.py",
       "repo": "test1"
     },
     {
-      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/services/call_api.py",
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/services/call_api.py",
       "name": "call_api.py",
       "repo": "test1"
     },
     {
-      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/main.py",
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/chatbot.py",
+      "name": "chatbot.py",
+      "repo": "test3"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/main.py",
+      "name": "main.py",
+      "repo": "test3"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/core/config.py",
+      "name": "config.py",
+      "repo": "test3"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/core/__init__.py",
+      "name": "__init__.py",
+      "repo": "test3"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/retriever.py",
+      "name": "retriever.py",
+      "repo": "test3"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/__init__.py",
+      "name": "__init__.py",
+      "repo": "test3"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/llm.py",
+      "name": "llm.py",
+      "repo": "test3"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/prompts.py",
+      "name": "prompts.py",
+      "repo": "test3"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/embedder.py",
+      "name": "embedder.py",
+      "repo": "test3"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/summary_guide.py",
+      "name": "summary_guide.py",
+      "repo": "test3"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/main.py",
       "name": "main.py",
       "repo": "test2"
     },
     {
-      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/api/data_service.py",
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/machine_learning/random_forrest_practice_iris_flower.py",
+      "name": "random_forrest_practice_iris_flower.py",
+      "repo": "test2"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/machine_learning/lasso.py",
+      "name": "lasso.py",
+      "repo": "test2"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/machine_learning/nm_vezba5.py",
+      "name": "nm_vezba5.py",
+      "repo": "test2"
+    },
+    {
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/api/data_service.py",
       "name": "data_service.py",
       "repo": "test2"
     },
     {
-      "id": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/api/__init__.py",
+      "id": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/api/__init__.py",
       "name": "__init__.py",
       "repo": "test2"
     }
   ],
   "edges": [
     {
-      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/main.py",
-      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/funcs/mul.py",
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/funcs/add.py",
       "type": "import"
     },
     {
-      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/main.py",
-      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/funcs/div.py",
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/services/call_api.py",
       "type": "import"
     },
     {
-      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/main.py",
-      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/services/call_api.py",
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/estimators/maximum_likelihood_estimator.py",
       "type": "import"
     },
     {
-      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/main.py",
-      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/funcs/add.py",
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/funcs/mul.py",
       "type": "import"
     },
     {
-      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test1/services/call_api.py",
-      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/main.py",
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/funcs/div.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/main.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/neutal_network/cifar_10_nn.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/estimators/maximum_likelihood_estimator.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/estimators/kalman_filtar.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test1/services/call_api.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/main.py",
       "type": "http"
     },
     {
-      "from": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/main.py",
-      "to": "/Users/marijastakic/Desktop/frontier-hackaton/TotallySpies/backend/src/cloning_dir/test2/api/data_service.py",
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/chatbot.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/core/config.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/chatbot.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/retriever.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/main.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/chatbot.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/retriever.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/embedder.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/retriever.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/llm.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/llm.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/core/config.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/embedder.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/core/config.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/summary_guide.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test3/rag/llm.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/main.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/machine_learning/lasso.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/main.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/machine_learning/random_forrest_practice_iris_flower.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/main.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/machine_learning/nm_vezba5.py",
+      "type": "import"
+    },
+    {
+      "from": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/main.py",
+      "to": "/Users/nemanjaudovic/PycharmProjects/TotallySpies/TotallySpies/backend/src/cloning_dir/test2/api/data_service.py",
       "type": "import"
     }
   ]
