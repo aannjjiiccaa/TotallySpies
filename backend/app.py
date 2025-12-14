@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.sqldb.models import Base
-from src.sqldb.db import engine
-from src.routing import auth
+from .src.sqldb.models import Base
+from .src.sqldb.db import engine
+from .src.routing import auth
+from .src.routing import ai
 
 # kreira tabele ako ne postoje
 Base.metadata.create_all(bind=engine)
@@ -25,3 +26,4 @@ app.add_middleware(
 )
 
 app.include_router(auth.router, prefix="/api")
+app.include_router(ai.router, prefix="/api")

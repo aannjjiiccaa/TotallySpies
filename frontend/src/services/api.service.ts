@@ -11,3 +11,8 @@ export async function registerUser(data: { email: string; password: string; user
   const res = await axios.post(`${API_URL}/register`, data);
   return res.data;
 }
+
+export async function getGraph() {
+  const res = await axios.get(`${API_URL}/graph`);
+  return res.data;
+}

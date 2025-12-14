@@ -88,8 +88,15 @@ def build_graph():
                 edges.append({"from": doc_id, "to": target, "type": "http"})
 
     graph = {"nodes": nodes, "edges": edges}
-    with open("graph.json", "w", encoding="utf-8") as f:
+
+    settings = get_settings()
+    graph_path = Path(settings.JSON_PATH)
+    if not graph_path.is_absolute():
+        graph_path = Path.cwd() / graph_path
+    graph_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with open(graph_path, "w", encoding="utf-8") as f:
         json.dump(graph, f, indent=2)
 
-    print(f"Graph written: {len(nodes)} nodes, {len(edges)} edges")
+    print(f"Graph written: {len(nodes)} nodes, {len(edges)} edges -> {graph_path}")
 

@@ -1,14 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import cytoscape, { type Core, type ElementDefinition } from "cytoscape";
 
-type NodeKind = "repo" | "service" | "file" | "db" | "queue";
-type EdgeKind = "CONTAINS" | "DEPENDS_ON" | "CALLS" | "READS_WRITES" | "PUBLISHES";
+/** input */
+type RawGraph = {
+  nodes?: Array<{ id: string; name: string; repo: string }>;
+  edges?: Array<{ from: string; to: string; type: string }>;
+};
+
+type NodeKind = "file";
+type EdgeKind = string;
 
 interface GraphNode {
-  id: string;
+  id: string; // full path
   kind: NodeKind;
-  label: string;
-  repo?: string;
+  label: string; // name
+  repo: string;
   description?: string;
   meta?: Record<string, any>;
 }
@@ -20,81 +26,113 @@ interface GraphEdge {
   kind: EdgeKind;
 }
 
-function getPlaceholderGraph(): { nodes: GraphNode[]; edges: GraphEdge[] } {
-  const nodes: GraphNode[] = [
-    // repos
-    { id: "repo-web", kind: "repo", label: "web-storefront", repo: "repo-web", description: "React storefront with checkout and product exploration." },
-    { id: "repo-admin", kind: "repo", label: "admin-dashboard", repo: "repo-admin", description: "Operational dashboard for support, merchandising, and catalog edits." },
-    { id: "repo-auth", kind: "repo", label: "auth-service", repo: "repo-auth", description: "Identity, sessions, and credential recovery." },
-    { id: "repo-order", kind: "repo", label: "order-service", repo: "repo-order", description: "Order lifecycle orchestration and status tracking." },
-    { id: "repo-payment", kind: "repo", label: "payment-service", repo: "repo-payment", description: "Payment, refund, and billing integrations." },
+/** repo theme palette (kao tvoj KIND_COLORS vibe) */
+const REPO_THEMES = [
+  { bg: "#93C5FD", border: "#2563EB", text: "#0B1220" }, // blue
+  { bg: "#86EFAC", border: "#16A34A", text: "#0B1220" }, // green
+  { bg: "#FDE68A", border: "#D97706", text: "#0B1220" }, // yellow
+  { bg: "#C4B5FD", border: "#7C3AED", text: "#0B1220" }, // purple
+  { bg: "#F9A8D4", border: "#DB2777", text: "#0B1220" }, // pink
+];
 
-    // services
-    { id: "svc-gateway", kind: "service", label: "api-gateway", repo: "repo-web", description: "Edge router that authenticates users and routes traffic to downstream services.", meta: { entryPoint: true } },
-    { id: "svc-auth", kind: "service", label: "auth", repo: "repo-auth", description: "Issues tokens, enforces auth, and integrates with third-party identity providers.", meta: { domain: "identity" } },
-    { id: "svc-order", kind: "service", label: "orders", repo: "repo-order", description: "Creates orders, reserves inventory, and publishes order events.", meta: { domain: "orders" } },
-    { id: "svc-payment", kind: "service", label: "payments", repo: "repo-payment", description: "Handles checkout sessions, payment intents, and billing webhooks.", meta: { domain: "billing" } },
+const BASE_X = 140;
 
-    // infra
-    { id: "db-postgres", kind: "db", label: "PostgreSQL", description: "Primary relational store for orders, payments, and users.", meta: { role: "primary store" } },
-    { id: "db-redis", kind: "db", label: "Redis", description: "Cache for sessions, rate limiting, and hot product reads.", meta: { role: "cache/sessions" } },
-    { id: "queue-events", kind: "queue", label: "event-bus", description: "Pub/Sub topics for order lifecycle and notification fan-out.", meta: { topics: ["order.created"] } },
+/** horizontal swimlanes */
+const LANE_Y_START = 140;
+const LANE_Y_GAP = 260;
 
-    // files
-    { id: "file-auth-controller", kind: "file", label: "auth.controller.ts", repo: "repo-auth", description: "HTTP handlers for login, signup, and password reset that call the auth service.", meta: { path: "src/auth/auth.controller.ts" } },
-    { id: "file-order-handler", kind: "file", label: "order.handler.ts", repo: "repo-order", description: "Background worker that processes order events, updates status, and writes projections.", meta: { path: "src/orders/order.handler.ts" } },
-  ];
+/** spacing inside lanes */
+const LEVEL_H = 110;         // ✅ visina nivoa unutar repo-a (manje -> zbijenije)
+const COL_W = 150;           // ✅ razmak po X
+const MAX_COLS_PER_LEVEL = 9; // ✅ posle ovoga ide novi “sub-row” u istom level-u
+const SUBROW_H = 84;
 
-  const edges: GraphEdge[] = [
-    { id: "e1", source: "repo-web", target: "svc-gateway", kind: "CALLS" },
-    { id: "e2", source: "repo-admin", target: "svc-gateway", kind: "CALLS" },
-
-    { id: "e3", source: "svc-gateway", target: "svc-auth", kind: "CALLS" },
-    { id: "e4", source: "svc-gateway", target: "svc-order", kind: "CALLS" },
-    { id: "e5", source: "svc-gateway", target: "svc-payment", kind: "CALLS" },
-
-    { id: "e6", source: "repo-auth", target: "svc-auth", kind: "DEPENDS_ON" },
-    { id: "e7", source: "repo-order", target: "svc-order", kind: "DEPENDS_ON" },
-    { id: "e8", source: "repo-payment", target: "svc-payment", kind: "DEPENDS_ON" },
-
-    { id: "e9", source: "svc-auth", target: "db-postgres", kind: "READS_WRITES" },
-    { id: "e10", source: "svc-order", target: "db-postgres", kind: "READS_WRITES" },
-    { id: "e11", source: "svc-payment", target: "db-postgres", kind: "READS_WRITES" },
-
-    { id: "e12", source: "svc-auth", target: "db-redis", kind: "READS_WRITES" },
-    { id: "e13", source: "svc-gateway", target: "db-redis", kind: "READS_WRITES" },
-
-    { id: "e14", source: "svc-order", target: "queue-events", kind: "PUBLISHES" },
-
-    { id: "e15", source: "svc-auth", target: "file-auth-controller", kind: "CONTAINS" },
-    { id: "e16", source: "svc-order", target: "file-order-handler", kind: "CONTAINS" },
-  ];
-
-  return { nodes, edges };
+function safeParseGraphData(graphData: any): RawGraph | undefined {
+  if (!graphData) return undefined;
+  try {
+    return typeof graphData === "string" ? (JSON.parse(graphData) as RawGraph) : (graphData as RawGraph);
+  } catch {
+    return undefined;
+  }
 }
 
-// Swimlanes layout
-const BASE_X = 140;
-const LANE_WIDTH = 260;
+/** helper: stabilan sort po putanji */
+function byPath(a: GraphNode, b: GraphNode) {
+  return a.id.localeCompare(b.id);
+}
 
-const KIND_Y: Record<NodeKind, number> = {
-  repo: 140,
-  service: 320,
-  db: 500,
-  queue: 680,
-  file: 860,
-};
+/**
+ * ✅ Compute "levels" inside a repo based on import edges:
+ * - level[target] = max(level[src] + 1) for import edges src->target
+ * - cycles: fallback keeps them at something stable (based on path depth)
+ */
+function computeLevelsForRepo(nodes: GraphNode[], edges: GraphEdge[]) {
+  const ids = new Set(nodes.map((n) => n.id));
 
-// ✅ vesele boje: bg = border-ish, border = malo tamnije, text = čitljiv
-const KIND_COLORS: Record<NodeKind, { bg: string; border: string; text: string }> = {
-  repo: { bg: "#93C5FD", border: "#2563EB", text: "#0B1220" },     // blue
-  service: { bg: "#86EFAC", border: "#16A34A", text: "#0B1220" },  // green
-  file: { bg: "#FDE68A", border: "#D97706", text: "#0B1220" },     // yellow
-  db: { bg: "#C4B5FD", border: "#7C3AED", text: "#0B1220" },       // purple
-  queue: { bg: "#F9A8D4", border: "#DB2777", text: "#0B1220" },    // pink
-};
+  // consider only import edges inside this repo
+  const importEdges = edges.filter((e) => e.kind === "import" && ids.has(e.source) && ids.has(e.target));
 
-export default function ProjectGraphPlaceholder() {
+  const indeg = new Map<string, number>();
+  const out = new Map<string, string[]>();
+
+  for (const n of nodes) {
+    indeg.set(n.id, 0);
+    out.set(n.id, []);
+  }
+  for (const e of importEdges) {
+    out.get(e.source)!.push(e.target);
+    indeg.set(e.target, (indeg.get(e.target) ?? 0) + 1);
+  }
+
+  // base fallback: path depth groups (keeps stable even with cycles)
+  const depthFallback = (id: string) => id.split("/").filter(Boolean).length;
+
+  // Kahn queue
+  const q: string[] = [];
+  for (const [id, d] of indeg.entries()) if (d === 0) q.push(id);
+  q.sort((a, b) => a.localeCompare(b));
+
+  const level = new Map<string, number>();
+  for (const n of nodes) level.set(n.id, 0);
+
+  let processed = 0;
+  while (q.length) {
+    const u = q.shift()!;
+    processed++;
+
+    const lu = level.get(u) ?? 0;
+    for (const v of out.get(u) ?? []) {
+      const next = lu + 1;
+      if ((level.get(v) ?? 0) < next) level.set(v, next);
+
+      indeg.set(v, (indeg.get(v) ?? 0) - 1);
+      if ((indeg.get(v) ?? 0) === 0) {
+        q.push(v);
+        q.sort((a, b) => a.localeCompare(b));
+      }
+    }
+  }
+
+  // cycle nodes (not processed) -> give them a reasonable level using fallback depth + 1
+  if (processed < nodes.length) {
+    // find max computed level so far
+    let maxL = 0;
+    for (const v of level.values()) maxL = Math.max(maxL, v);
+
+    for (const n of nodes) {
+      // nodes still with indeg>0 are in a cycle
+      if ((indeg.get(n.id) ?? 0) > 0) {
+        // keep them near bottom but stable
+        const l = Math.min(maxL + 1, 6) + (depthFallback(n.id) % 2);
+        level.set(n.id, l);
+      }
+    }
+  }
+
+  return level;
+}
+
+export default function ProjectGraphPlaceholder({ graphData }: { graphData?: any } = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
 
@@ -102,8 +140,7 @@ export default function ProjectGraphPlaceholder() {
     id: string;
     label: string;
     kind: NodeKind;
-    description?: string;
-    repo?: { id: string; label: string; color?: string };
+    repo?: { id: string; label: string; colorBg: string; colorBorder: string };
     meta?: Record<string, any>;
     neighbors: string[];
     edges: string[];
@@ -112,78 +149,114 @@ export default function ProjectGraphPlaceholder() {
   const [hovered, setHovered] = useState<{
     id: string;
     label: string;
-    kind: NodeKind;
-    description?: string;
     repoLabel?: string;
+    repoId?: string;
   } | null>(null);
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const graph = useMemo(() => getPlaceholderGraph(), []);
+  const graph = useMemo(() => {
+    const raw = safeParseGraphData(graphData);
+
+    const nodes: GraphNode[] = (raw?.nodes ?? []).map((n) => ({
+      id: n.id,
+      kind: "file",
+      label: n.name, // ✅ label = name
+      repo: n.repo ?? "unknown",
+      description: "",
+      meta: { path: n.id, repo: n.repo, name: n.name },
+    }));
+
+    const edges: GraphEdge[] = (raw?.edges ?? []).map((e, idx) => ({
+      id: `e-${idx}-${e.type}`,
+      source: e.from,
+      target: e.to,
+      kind: e.type,
+    }));
+
+    return { nodes, edges };
+  }, [graphData]);
+
   const layoutPadding = 60;
 
-  const repoNodes = useMemo(() => graph.nodes.filter((n) => n.kind === "repo"), [graph]);
+  const repoIds = useMemo(() => {
+    const set = new Set<string>();
+    graph.nodes.forEach((n) => set.add(n.repo ?? "unknown"));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [graph.nodes]);
 
-  const repoColors = useMemo(() => {
-    const palette = ["#E0E7FF", "#DCFCE7", "#FEF9C3", "#F3E8FF", "#FCE7F3", "#E2E8F0"];
-    return repoNodes.reduce<Record<string, string>>((acc, repo, idx) => {
-      acc[repo.id] = palette[idx % palette.length];
+  const repoLookup = useMemo(() => {
+    return repoIds.reduce<Record<string, string>>((acc, r) => {
+      acc[r] = r;
       return acc;
     }, {});
-  }, [repoNodes]);
+  }, [repoIds]);
 
-  const repoLookup = useMemo(
-    () =>
-      repoNodes.reduce<Record<string, string>>((acc, repo) => {
-        acc[repo.id] = repo.label;
-        return acc;
-      }, {}),
-    [repoNodes]
-  );
+  const repoTheme = useMemo(() => {
+    return repoIds.reduce<Record<string, { bg: string; border: string; text: string }>>((acc, repoId, idx) => {
+      acc[repoId] = REPO_THEMES[idx % REPO_THEMES.length];
+      return acc;
+    }, {});
+  }, [repoIds]);
 
-  // pozicioniranje bez preklapanja (infra db/queue širi po X)
+  /** ✅ NEW: multi-level layout inside each repo to reduce edge mess */
   const elements: ElementDefinition[] = useMemo(() => {
-    const laneIds = [...repoNodes.map((r) => r.id), "infra"];
-    const laneIndex = (node: GraphNode) => laneIds.indexOf(node.repo ?? "infra");
+    const grouped: Record<string, GraphNode[]> = {};
+    for (const n of graph.nodes) (grouped[n.repo ?? "unknown"] ??= []).push(n);
 
-    const counters: Record<string, number> = {};
-    const nextOffsetIndex = (lane: number, kind: NodeKind) => {
-      const key = `${lane}:${kind}`;
-      counters[key] = (counters[key] ?? 0) + 1;
-      return counters[key] - 1;
-    };
+    for (const repo of Object.keys(grouped)) grouped[repo].sort(byPath);
 
-    const spread = (k: number) => (k === 0 ? 0 : (k % 2 === 1 ? 1 : -1) * Math.ceil(k / 2));
+    const nodeElements: ElementDefinition[] = [];
 
-    const nodeElements: ElementDefinition[] = graph.nodes.map((n) => {
-      const c = KIND_COLORS[n.kind];
+    repoIds.forEach((repoId, laneIdx) => {
+      const laneY = LANE_Y_START + laneIdx * LANE_Y_GAP;
+      const theme = repoTheme[repoId] ?? REPO_THEMES[0];
+      const nodesInRepo = grouped[repoId] ?? [];
 
-      const lane = laneIndex(n);
-      const baseX = BASE_X + lane * LANE_WIDTH;
-      const baseY = KIND_Y[n.kind] ?? 200;
+      // compute levels for this repo using import edges
+      const levels = computeLevelsForRepo(nodesInRepo, graph.edges);
 
-      const i = nextOffsetIndex(lane, n.kind);
+      // group nodes by level
+      const byLevel = new Map<number, GraphNode[]>();
+      let maxLevel = 0;
 
-      const STEP_X = n.kind === "db" || n.kind === "queue" ? 160 : 95;
-      const STEP_Y = n.kind === "file" ? 28 : 20;
+      for (const n of nodesInRepo) {
+        const l = levels.get(n.id) ?? 0;
+        maxLevel = Math.max(maxLevel, l);
+        if (!byLevel.has(l)) byLevel.set(l, []);
+        byLevel.get(l)!.push(n);
+      }
 
-      const dx = spread(i) * STEP_X;
-      const dy = n.repo ? i * STEP_Y : 0;
+      // stable sort inside each level
+      for (const [l, arr] of byLevel.entries()) arr.sort(byPath);
 
-      return {
-        data: {
-          id: n.id,
-          label: n.label,
-          kind: n.kind,
-          repo: n.repo,
-          description: n.description ?? "",
-          meta: n.meta ?? {},
-          bgColor: c.bg,
-          borderColor: c.border,
-          textColor: c.text,
-        },
-        position: { x: baseX + dx, y: baseY + dy },
-      };
+      // place: each level is a horizontal "row" inside the repo lane
+      // if a level has too many nodes, wrap into subrows (still within same level band)
+      for (let level = 0; level <= maxLevel; level++) {
+        const arr = byLevel.get(level) ?? [];
+        arr.forEach((n, i) => {
+          const col = i % MAX_COLS_PER_LEVEL;
+          const subRow = Math.floor(i / MAX_COLS_PER_LEVEL);
+
+          const x = BASE_X + col * COL_W;
+          const y = laneY + level * LEVEL_H + subRow * SUBROW_H;
+
+          nodeElements.push({
+            data: {
+              id: n.id,
+              label: n.label,
+              kind: n.kind,
+              repo: repoId,
+              description: n.description ?? "",
+              meta: n.meta ?? {},
+              bgColor: theme.bg,
+              borderColor: theme.border,
+              textColor: theme.text,
+            },
+            position: { x, y },
+          });
+        });
+      }
     });
 
     const edgeElements: ElementDefinition[] = graph.edges.map((e) => ({
@@ -191,7 +264,7 @@ export default function ProjectGraphPlaceholder() {
     }));
 
     return [...nodeElements, ...edgeElements];
-  }, [graph, repoNodes]);
+  }, [graph.nodes, graph.edges, repoIds, repoTheme]);
 
   const selectNode = (node: any) => {
     const cy = cyRef.current;
@@ -204,19 +277,21 @@ export default function ProjectGraphPlaceholder() {
     cy.elements().difference(neighborhood).addClass("dimmed");
 
     const repoId = node.data("repo") as string | undefined;
+    const t = repoId ? repoTheme[repoId] : undefined;
 
     setSelected({
       id: node.data("id"),
       label: node.data("label"),
       kind: node.data("kind"),
-      description: node.data("description"),
-      repo: repoId ? { id: repoId, label: repoLookup[repoId] ?? repoId, color: repoColors[repoId] } : undefined,
+      repo: repoId
+        ? { id: repoId, label: repoLookup[repoId] ?? repoId, colorBg: t?.bg ?? "#E2E8F0", colorBorder: t?.border ?? "#334155" }
+        : undefined,
       meta: node.data("meta") ?? {},
       neighbors: node.neighborhood("node").map((n: any) => n.data("label")),
       edges: node.connectedEdges().map((e: any) => {
         const s = e.source().data("label");
-        const t = e.target().data("label");
-        return `${e.data("kind")}: ${s} → ${t}`;
+        const t2 = e.target().data("label");
+        return `${e.data("kind")}: ${s} → ${t2}`;
       }),
     });
   };
@@ -248,7 +323,6 @@ export default function ProjectGraphPlaceholder() {
           height: 56,
           "overlay-opacity": 0,
 
-          // ✅ shadow default (blaga) + hover jača
           "shadow-opacity": 0.18,
           "shadow-blur": 8,
           "shadow-offset-x": 0,
@@ -259,32 +333,17 @@ export default function ProjectGraphPlaceholder() {
           "transition-duration": 150,
         } as any,
       },
-
-      // jači shadow na hover (vidljiv!)
       {
         selector: "node.hovered",
-        style: {
-          "shadow-opacity": 0.32,
-          "shadow-blur": 10,
-          "shadow-offset-y": 6,
-        } as any,
+        style: { "shadow-opacity": 0.32, "shadow-blur": 10, "shadow-offset-y": 6 } as any,
       },
-
       {
         selector: "node.selected",
-        style: {
-          "border-width": 3,
-          width: 64,
-          height: 64,
-          opacity: 1,
-        } as any,
+        style: { "border-width": 3, width: 64, height: 64, opacity: 1 } as any,
       },
-      {
-        selector: "node.dimmed",
-        style: { opacity: 0.22 } as any,
-      },
+      { selector: "node.dimmed", style: { opacity: 0.22 } as any },
 
-      // edge: orto + rounded corners, bez labela, bez “click thicken”
+      // ✅ pravi uglovi
       {
         selector: "edge",
         style: {
@@ -310,14 +369,11 @@ export default function ProjectGraphPlaceholder() {
       },
 
       { selector: "edge.dimmed", style: { opacity: 0.12 } as any },
-      { selector: 'edge[kind="DEPENDS_ON"]', style: { "line-style": "dashed" } as any },
+
+      { selector: 'edge[kind="import"]', style: { "line-style": "solid" } as any },
       {
-        selector: 'edge[kind="PUBLISHES"]',
-        style: {
-          "line-style": "dotted",
-          "line-color": "#DB2777",
-          "target-arrow-color": "#DB2777",
-        } as any,
+        selector: 'edge[kind="http"]',
+        style: { "line-style": "dashed", "line-color": "#0EA5E9", "target-arrow-color": "#0EA5E9" } as any,
       },
     ] as any;
 
@@ -342,7 +398,7 @@ export default function ProjectGraphPlaceholder() {
     cy.boxSelectionEnabled(false);
 
     cy.fit(undefined, layoutPadding);
-    cy.zoom(cy.zoom() * 1.2);
+    cy.zoom(cy.zoom() * 1.15);
 
     cy.on("tap", "node", (evt) => selectNode(evt.target));
 
@@ -354,8 +410,7 @@ export default function ProjectGraphPlaceholder() {
       setHovered({
         id: node.data("id"),
         label: node.data("label"),
-        kind: node.data("kind"),
-        description: node.data("description"),
+        repoId,
         repoLabel: repoId ? repoLookup[repoId] ?? repoId : undefined,
       });
     });
@@ -376,7 +431,7 @@ export default function ProjectGraphPlaceholder() {
       cy.destroy();
       cyRef.current = null;
     };
-  }, [elements, repoLookup, repoColors, layoutPadding]);
+  }, [elements, repoLookup, repoTheme, layoutPadding]);
 
   const smoothZoom = (factor: number) => {
     const cy = cyRef.current;
@@ -391,7 +446,7 @@ export default function ProjectGraphPlaceholder() {
     const cy = cyRef.current;
     if (!cy) return;
     cy.fit(undefined, layoutPadding);
-    cy.animate({ zoom: cy.zoom() * 1.2 }, { duration: 160, easing: "ease-out" as any });
+    cy.animate({ zoom: cy.zoom() * 1.15 }, { duration: 160, easing: "ease-out" as any });
   };
 
   const resetView = () => {
@@ -433,11 +488,14 @@ export default function ProjectGraphPlaceholder() {
           {hovered && (
             <div className="absolute left-3 top-3 z-10 rounded-md border border-border bg-background/90 px-3 py-2 shadow-sm backdrop-blur text-xs max-w-sm">
               <div className="flex items-center gap-2">
-                <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: KIND_COLORS[hovered.kind].border }} />
+                <span
+                  className="inline-block h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: hovered.repoId ? repoTheme[hovered.repoId]?.border : "#334155" }}
+                />
                 <div className="font-semibold text-foreground">{hovered.label}</div>
               </div>
               {hovered.repoLabel && <div className="text-muted-foreground mt-0.5">{hovered.repoLabel}</div>}
-              {hovered.description && <div className="text-muted-foreground mt-1 leading-snug max-h-20 overflow-hidden text-ellipsis">{hovered.description}</div>}
+              <div className="text-muted-foreground mt-1 leading-snug max-h-20 overflow-hidden text-ellipsis">{hovered.id}</div>
             </div>
           )}
 
@@ -471,30 +529,35 @@ export default function ProjectGraphPlaceholder() {
           <div ref={containerRef} className="h-[74vh] min-h-[620px] max-h-[820px] w-full cursor-default" />
 
           <div className="absolute left-3 bottom-3 z-10 flex items-center gap-2">
-            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={zoomIn}>+</button>
-            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={zoomOut}>-</button>
-            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={fit}>Fit</button>
-            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={resetView}>Reset</button>
+            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={zoomIn}>
+              +
+            </button>
+            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={zoomOut}>
+              -
+            </button>
+            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={fit}>
+              Fit
+            </button>
+            <button className="rounded-full border border-border bg-background px-3 py-2 text-xs shadow-sm" onClick={resetView}>
+              Reset
+            </button>
           </div>
 
           {/* Legend */}
           <div className="absolute right-3 bottom-3 z-10">
             <div className="bg-background/90 border border-border rounded-xl p-3 shadow-sm backdrop-blur">
-              <p className="text-xs font-medium text-muted-foreground mb-2">Node Types</p>
+              <p className="text-xs font-medium text-muted-foreground mb-2">Repos</p>
               <div className="flex flex-wrap gap-2">
-                {(Object.keys(KIND_COLORS) as NodeKind[]).map((kind) => {
-                  const c = KIND_COLORS[kind];
+                {repoIds.map((repoId) => {
+                  const c = repoTheme[repoId] ?? REPO_THEMES[0];
                   return (
-                    <div
-                      key={kind}
-                      className="flex items-center gap-2 px-2 py-1 rounded-md text-xs font-medium capitalize"
-                      style={{ backgroundColor: c.bg, color: "#0B1220" }}
-                    >
+                    <div key={repoId} className="flex items-center gap-2 px-2 py-1 rounded-md text-xs font-medium" style={{ backgroundColor: c.bg, color: "#0B1220" }}>
                       <span className="h-2 w-2 rounded-full" style={{ backgroundColor: c.border }} />
-                      {kind}
+                      {repoLookup[repoId] ?? repoId}
                     </div>
                   );
                 })}
+                {!repoIds.length && <div className="text-xs text-muted-foreground">No repos</div>}
               </div>
             </div>
           </div>
@@ -512,22 +575,20 @@ export default function ProjectGraphPlaceholder() {
             <div className="space-y-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: KIND_COLORS[selected.kind].border }} />
+                  <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: selected.repo?.colorBorder ?? "#334155" }} />
                   <div className="font-mono text-sm font-medium">{selected.label}</div>
                 </div>
 
-                <div className="text-xs text-muted-foreground font-mono">{selected.id}</div>
+                <div className="text-xs text-muted-foreground font-mono break-words">{selected.id}</div>
                 <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{selected.kind}</div>
 
                 {selected.repo && (
                   <div className="flex items-center gap-2 text-xs">
-                    <span className="h-3 w-3 rounded-full border border-border" style={{ backgroundColor: selected.repo.color }} />
+                    <span className="h-3 w-3 rounded-full border border-border" style={{ backgroundColor: selected.repo.colorBg }} />
                     <span className="font-medium">{selected.repo.label}</span>
                   </div>
                 )}
               </div>
-
-              {selected.description && <p className="text-sm text-muted-foreground leading-relaxed">{selected.description}</p>}
 
               {selected.meta && Object.keys(selected.meta).length > 0 && (
                 <div>

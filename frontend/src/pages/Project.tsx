@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Users } from "lucide-react";
@@ -6,15 +6,20 @@ import { mockProjects } from "@/data/mockData";
 import OverviewTab from "@/components/project/OverviewTab";
 import ArchitectureTab from "@/components/project/ArchitectureTab";
 import RepositoriesTab from "@/components/project/RepositoriesTab";
-import FlowsTab from "@/components/project/FlowsTab";
-import OnboardingTab from "@/components/project/OnboardingTab";
+// Flows and Onboarding tabs removed
 import TopNav from "@/components/TopNav";
 
 const Project = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  const project = mockProjects.find((p) => p.id === id);
+  const location = useLocation();
+  const projectFromState = (location.state as any)?.project;
+
+  let project = mockProjects.find((p) => p.id === id);
+  if (!project && projectFromState) {
+    project = projectFromState;
+  }
 
   if (!project) {
     return (
@@ -39,7 +44,7 @@ const Project = () => {
 
       {/* Project Header */}
       <div className="border-b border-border">
-        <div className="mx-auto max-w-[1600px] px-6 py-8">
+        <div className="mx-auto max-w-[1600px] px-8 py-10">
           <div className="flex items-start justify-between gap-4">
             <div>
               <h1 className="text-2xl font-semibold tracking-tight">{project.name}</h1>
@@ -77,10 +82,10 @@ const Project = () => {
       </div>
 
       {/* Tabs */}
-      <div className="mx-auto max-w-[1600px] px-6 py-6">
+      <div className="mx-auto max-w-[1600px] px-8 py-8">
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="h-auto w-full justify-start gap-1 rounded-none border-b border-border bg-transparent p-0">
-            {["Overview", "Architecture", "Repositories", "Flows", "Onboarding"].map((tab) => (
+            {["Overview", "Architecture", "Repositories"].map((tab) => (
               <TabsTrigger
                 key={tab}
                 value={tab.toLowerCase()}
@@ -101,12 +106,7 @@ const Project = () => {
             <TabsContent value="repositories" className="mt-0">
               <RepositoriesTab project={project} />
             </TabsContent>
-            <TabsContent value="flows" className="mt-0">
-              <FlowsTab project={project} />
-            </TabsContent>
-            <TabsContent value="onboarding" className="mt-0">
-              <OnboardingTab project={project} />
-            </TabsContent>
+            {/* Flows and Onboarding removed */}
           </div>
         </Tabs>
       </div>

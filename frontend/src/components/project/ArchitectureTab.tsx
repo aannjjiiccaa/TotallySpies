@@ -11,7 +11,7 @@ const ArchitectureTab = ({ project }: ArchitectureTabProps) => {
       {/* System graph */}
       <section>
         <h2 className="text-lg font-medium mb-4">System Graph</h2>
-        <ProjectGraphPlaceholder />
+        <ProjectGraphPlaceholder graphData={project.graph} />
       </section>
 
       {/* Core services */}

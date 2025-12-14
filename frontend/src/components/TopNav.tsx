@@ -15,7 +15,7 @@ interface TopNavProps {
 const TopNav = ({ onBack, backLabel = "Back" }: TopNavProps) => {
   return (
     <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto flex h-14 max-w-[1600px] items-center px-6">
+      <div className="mx-auto flex h-14 max-w-[1600px] items-center px-8">
         <div className="flex items-center gap-3">
           {onBack && (
             <button

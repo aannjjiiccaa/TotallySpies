@@ -8,26 +8,19 @@ export interface Repository {
   usedBy: string[];
 }
 
-export interface Flow {
-  id: string;
-  name: string;
-  description: string;
-  steps: {
-    step: number;
-    action: string;
-    service: string;
-  }[];
-}
-
 export interface Project {
   id: string;
   name: string;
   description: string;
   techStack: string[];
   repositories: Repository[];
-  flows: Flow[];
   lastUpdated: string;
   collaborators: string[];
+  // optional graph returned from backend when creating/importing a project
+  graph?: {
+    nodes: Array<{ id: string; name?: string; repo?: string }>;
+    edges?: Array<{ id?: string; from: string; to: string; type?: string }>;
+  } | null;
 }
 
 export interface User {

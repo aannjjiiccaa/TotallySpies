@@ -13,7 +13,7 @@ const Dashboard = () => {
       <TopNav />
 
       {/* Main content */}
-      <main className="mx-auto max-w-[1600px] px-6 py-10">
+      <main className="mx-auto max-w-[1600px] px-8 py-12">
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">Projects</h1>

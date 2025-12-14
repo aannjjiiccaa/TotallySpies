@@ -20,7 +20,7 @@ const Welcome = () => {
       </div>
 
       {/* Hero */}
-      <main className="relative z-10 mx-auto flex max-w-[1600px] flex-col items-center text-center gap-8 px-6 py-20">
+      <main className="relative z-10 mx-auto flex max-w-[1600px] flex-col items-center text-center gap-8 px-8 py-24">
         <div className="flex items-center gap-3 animate-fade-in">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#69FF47] text-white shadow-sm animate-bounce">
             <svg

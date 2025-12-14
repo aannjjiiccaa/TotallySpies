@@ -3,12 +3,12 @@ from fastapi.responses import JSONResponse
 from pathlib import Path
 import json
 
-from TotallySpies.backend.src.core.config import get_settings
-from TotallySpies.backend.src.graph_processing.graph_builder import build_graph
+from ..core.config import get_settings
+from ..graph_processing.graph_builder import build_graph
 
 router = APIRouter()
 
-@router.post("/graph")
+@router.get("/graph")
 async def generate_graph():
     try:
         build_graph()  

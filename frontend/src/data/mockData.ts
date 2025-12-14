@@ -2,7 +2,7 @@ import { Project, User } from "@/types/project";
 
 export const mockUser: User = {
   id: "1",
-  email: "dev@company.com",
+  email: "totallyspies@hackaton.com",
   name: "Alex Chen",
 };
 
@@ -79,33 +79,7 @@ export const mockProjects: Project[] = [
         usedBy: [],
       },
     ],
-    flows: [
-      {
-        id: "1",
-        name: "User Signup",
-        description: "Complete flow for new user registration including email verification",
-        steps: [
-          { step: 1, action: "User submits signup form", service: "web-storefront" },
-          { step: 2, action: "Request routed through gateway", service: "api-gateway" },
-          { step: 3, action: "Create user record", service: "user-service" },
-          { step: 4, action: "Generate verification token", service: "auth-service" },
-          { step: 5, action: "Send verification email", service: "notification-service" },
-        ],
-      },
-      {
-        id: "2",
-        name: "Checkout Process",
-        description: "End-to-end order placement and payment processing",
-        steps: [
-          { step: 1, action: "User clicks checkout", service: "web-storefront" },
-          { step: 2, action: "Validate cart items and inventory", service: "inventory-service" },
-          { step: 3, action: "Create pending order", service: "order-service" },
-          { step: 4, action: "Process payment with Stripe", service: "payment-service" },
-          { step: 5, action: "Confirm order and update inventory", service: "order-service" },
-          { step: 6, action: "Send order confirmation", service: "notification-service" },
-        ],
-      },
-    ],
+    // flows removed
   },
   {
     id: "2",
@@ -134,6 +108,6 @@ export const mockProjects: Project[] = [
         usedBy: ["analytics-dashboard"],
       },
     ],
-    flows: [],
+    // flows removed
   },
 ];
