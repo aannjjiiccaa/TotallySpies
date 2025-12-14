@@ -16,7 +16,9 @@ from chatbot import answer
 
 router = APIRouter()
 
-@router.get("/graph")
+
+
+@router.post("/graph")
 async def generate_graph():
     try:
         build_graph()  
