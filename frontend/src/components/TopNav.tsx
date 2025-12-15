@@ -55,7 +55,7 @@ const TopNav = ({ onBack, backLabel = "Back" }: TopNavProps) => {
                 className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center text-sm font-medium text-secondary-foreground cursor-pointer"
                 title="Account menu"
               >
-                {mockUser.name.charAt(0)}
+                T
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
